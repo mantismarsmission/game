@@ -69,10 +69,29 @@
                     {
                         text: "Deploy automated scraping drones to clear collector glass.",
                         effects: { energy: +15, life: -10, radiation: -5 },
-                        nextEvent: "marsquake_event"
+                        nextEvent: "EJEMPLOEVENTO"
                     },
                     {
                         text: "Conserve all battery reserves and shut down non-essential electronics.",
+                        effects: { energy: +5, life: -15, radiation: 0 },
+                        nextEvent: "EJEMPLOEVENTO"
+                    }
+                ]
+            },
+            "EJEMPLOEVENTO": {
+                tag: "esto es un ejemplo",
+                image: "image1.png",
+                alt: "Texto alternativo",
+                heading: "Titulo ejemplo",
+                description: "texto descriptivo ejemplo",
+                choices: [
+                    {
+                        text: "Opción 1.",
+                        effects: { energy: +15, life: -10, radiation: -5 },
+                        nextEvent: "marsquake_event"
+                    },
+                    {
+                        text: "Opcion 2",
                         effects: { energy: +5, life: -15, radiation: 0 },
                         nextEvent: "marsquake_event"
                     }
