@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mars Outpost: Survival Protocol</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+    <div class="game-container">
+        <!-- Dashboard Header -->
+        <header class="dashboard">
+            <div class="title-area">
+                <h1>Ares-IV Outpost</h1>
+                <span id="day-counter">Sol 1 / Mission Phase</span>
+            </div>
+            <div class="stats-group">
+                <div class="stat-box">
+                    <div class="stat-label">Life Support</div>
+                    <div class="stat-value" id="stat-life">100%</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Radiation Shield</div>
+                    <div class="stat-value" id="stat-radiation">100%</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Energy</div>
+                    <div class="stat-value" id="stat-energy">100%</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Visual / Image Element -->
+        <div class="visual-area" id="visual-container">
+            <div class="event-badge" id="event-tag">Outpost Initialized</div>
+            <img id="event-image" src="image1.png" alt="Mars outpost habitat module overview">
+        </div>
+
+        <!-- Main Narrative Content -->
+        <main class="content-area" id="main-content">
+            <div>
+                <h2 class="event-heading" id="event-heading">Welcome to Mars, Commander</h2>
+                <p class="event-description" id="event-description">
+                    Your habitation module has successfully touched down in the-Elysium Planitia region. Systems are green, but harsh Martian weather patterns loom on the horizon. Manage your resources carefully to ensure mission survival.
+                </p>
+            </div>
+
+            <div class="choices-area" id="choices-area">
+                <button class="choice-btn" id="choice-0" onclick="makeChoice(0)">
+                    <span id="choice-0-text">Begin Mission Logistics</span>
+                    <span class="arrow">→</span>
+                </button>
+                <button class="choice-btn" id="choice-1" onclick="makeChoice(1)">
+                    <span id="choice-1-text">Run Diagnostic Checks</span>
+                    <span class="arrow">→</span>
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
