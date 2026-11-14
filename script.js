@@ -1,6 +1,7 @@
 // Game State Variables
         let gameState = {
             life: 100,
+            food: 100,
             radiation: 100,
             energy: 100,
             currentEventId: "start"
@@ -30,12 +31,12 @@
                 choices: [
                     {
                         text: "Reinforce external solar panels and grid stability.",
-                        effects: { energy: +10, life: -5, radiation: 0 },
+                        effects: { energy: +10, life: -5, radiation: 0 , food: 0},
                         nextEvent: "solar_flare_warning"
                     },
                     {
                         text: "Seal airlock bulkheads and run full-system radiation sweeps.",
-                        effects: { radiation: +10, energy: -10, life: 0 },
+                        effects: { radiation: +10, energy: -10, life: 0 , food: 0},
                         nextEvent: "dust_storm_approach"
                     }
                 ]
@@ -49,12 +50,12 @@
                 choices: [
                     {
                         text: "Activate emergency magnetic shields (High Energy Drain).",
-                        effects: { radiation: +15, energy: -35, life: 0 },
+                        effects: { radiation: +15, energy: -35, life: 0, food: 0},
                         nextEvent: "marsquake_event"
                     },
                     {
                         text: "Reroute power to life support life-cells and hunker down.",
-                        effects: { life: +10, radiation: -20, energy: -15 },
+                        effects: { life: +10, radiation: -20, energy: -15, food: 0},
                         nextEvent: "marsquake_event"
                     }
                 ]
@@ -68,12 +69,12 @@
                 choices: [
                     {
                         text: "Deploy automated scraping drones to clear collector glass.",
-                        effects: { energy: +15, life: -10, radiation: -5 },
+                        effects: { energy: +15, life: -10, radiation: -5, food: 0 },
                         nextEvent: "EJEMPLOEVENTO"
                     },
                     {
                         text: "Conserve all battery reserves and shut down non-essential electronics.",
-                        effects: { energy: +5, life: -15, radiation: 0 },
+                        effects: { energy: +5, life: -15, radiation: 0, food: 0 },
                         nextEvent: "EJEMPLOEVENTO"
                     }
                 ]
@@ -87,12 +88,12 @@
                 choices: [
                     {
                         text: "Opción 1.",
-                        effects: { energy: +15, life: -10, radiation: -5 },
+                        effects: { energy: +15, life: -10, radiation: -5, food: 0 },
                         nextEvent: "marsquake_event"
                     },
                     {
                         text: "Opcion 2",
-                        effects: { energy: +5, life: -15, radiation: 0 },
+                        effects: { energy: +5, life: -15, radiation: 0, food: 0 },
                         nextEvent: "marsquake_event"
                     }
                 ]
@@ -106,12 +107,12 @@
                 choices: [
                     {
                         text: "Manually recalibrate the sub-surface pressure release valves.",
-                        effects: { life: +15, energy: -15, radiation: -5 },
+                        effects: { life: +15, energy: -15, radiation: -5, food: 0 },
                         nextEvent: "mission_success"
                     },
                     {
                         text: "Rely on automated fail-safes and secure internal loose equipment.",
-                        effects: { life: -20, energy: -10, radiation: 0 },
+                        effects: { life: -20, energy: -10, radiation: 0, food: 0 },
                         nextEvent: "check_failure"
                     }
                 ]
@@ -153,6 +154,7 @@
 
             // Update stats display
             document.getElementById("stat-life").innerText = `${gameState.life}%`;
+            document.getElementById("stat-food").innerText = `${gameState.food}%`;
             document.getElementById("stat-radiation").innerText = `${gameState.radiation}%`;
             document.getElementById("stat-energy").innerText = `${gameState.energy}%`;
 
