@@ -457,8 +457,8 @@ const eventsList = {
     "minigame_descent": {
         tag: "Subsurface Recon",
         image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/july/TurtleRock_Curiosity_2048.jpg?w=2000&h=1204&fit=crop&crop=faces%2Cfocalpoint",
-        alt: "Subsurface lava tube reconnaissance drone",
-        heading: "Subsurface Descent: Jezero Lava Tube",
+        alt: "Subsurface reconnaissance drone",
+        heading: "Subsurface Descent: Jezero Crater",
         description: "Deploy the scout drone into the subterranean cavern to collect ancient microbial biosignatures. Complete the descent before continuing.",
         isMinigame: true,
         choices: [
