@@ -7,6 +7,7 @@ let gameState = {
     sol: 1,
     currentEventId: "welcome",
     randomEventsRemaining: 2,
+    inRandomPhase: true,
     randomPool: ["dust_tornado", "event2", "event3", "event4", "event5", "event6"]
 };
 
@@ -546,18 +547,12 @@ function makeChoice(choiceIndex) {
     gameState.radiation = Math.max(0, Math.min(100, gameState.radiation + chosenAction.effects.radiation));
     gameState.energy = Math.max(0, Math.min(100, gameState.energy + chosenAction.effects.energy));
 
-    // Track whether we just finished the 2nd random event
-    const justFinishedSecondRandom =
-        gameState.randomEventsRemaining === 0 &&
-        gameState.randomPool.length === 4 &&
-        previousId !== "sol_transition_2";
-
     // Determine next event node
     if (previousId === "welcome") {
         // Sol 1: Pick 1st random event
         gameState.randomEventsRemaining--;
         gameState.currentEventId = pickRandomEvent();
-    } else if (gameState.randomEventsRemaining > 0 && previousId !== "sol_transition") {
+    } else if (gameState.inRandomPhase && gameState.randomEventsRemaining > 0 && previousId !== "sol_transition") {
         // Finished Random Event #1 -> End of Sol 1 screen
         gameState.currentEventId = "sol_transition";
     } else if (previousId === "sol_transition") {
@@ -565,9 +560,9 @@ function makeChoice(choiceIndex) {
         gameState.sol++;
         gameState.randomEventsRemaining--;
         gameState.currentEventId = pickRandomEvent();
-    } else if (justFinishedSecondRandom) {
+    } else if (gameState.inRandomPhase && gameState.randomEventsRemaining === 0) {
         // Finished Random Event #2 -> End of Sol 2 screen
-        gameState.randomPool = [];
+        gameState.inRandomPhase = false;
         gameState.currentEventId = "sol_transition_2";
     } else if (previousId === "sol_transition_2") {
         // Start Sol 3 -> Choice between Main Mission or Sidequest
