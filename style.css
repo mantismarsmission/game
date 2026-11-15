@@ -7,6 +7,7 @@
             --text-muted: #b0bec5;
             --danger: #d32f2f;
             --success: #388e3c;
+            --complete:#facc15;
         }
 
         * {
@@ -200,6 +201,7 @@
         }
 
         .game-over-screen.success h2 { color: var(--success); }
+        .game-over-screen.complete h2 { color: var(--complete); }
         .game-over-screen.failure h2 { color: var(--danger); }
 
         .restart-btn {
