@@ -37,30 +37,11 @@
                     {
                         text: "Seal airlock bulkheads and run full-system radiation sweeps.",
                         effects: { radiation: +10, energy: -10, life: 0 , food: 0},
-                        nextEvent: "dust_tornado"
+                        nextEvent: "EJEMPLOEVENTO"
                     }
                 ]
             },
-          "dust_tornado": {
-                tag: "Xtreme weather.",
-                image: "https://www.nasa.gov/wp-content/uploads/2015/09/21_the_serpent_dust_devil_on_mars_pia15116-br2.jpg?resize=900,597",
-                alt: "a dust tornado in mars",
-                heading: "The bad tornados",
-                description: "Two dust tornadoes are heading toward the space base, one toward the solar panels and the other toward the living quarters. You only have enough time to build a barricade to stop one of the approaching tornadoes. Which one will you protect?",
-                choices: [
-                    {
-                        text: "Create a barricade to protect the bedroom",
-                        effects: { lifeSupport: 0: , food: 0, radiation: 0, energy: -20 },
-                        nextEvent: "event2"
-                    },
-                    {
-                        text: "Create a barricade to protect the solar panels",
-                        effects: { lifeSupport: -20, food: 0, radiation: 0, energy: 0 },
-                        nextEvent: "event2"
-                    }
-                ]
-            },
-
+          
            "event2": {
                 tag: "Cosmic event",
                 image: "https://science.nasa.gov/wp-content/uploads/2023/04/hubble_friday_07302015-jpg.webp?resize=900,658",
@@ -287,6 +268,7 @@
 
             // Apply stats changes
             gameState.life = Math.max(0, Math.min(100, gameState.life + chosenAction.effects.life));
+            gameState.food = Math.max(0, Math.min(100, gameState.food + chosenAction.effects.food));
             gameState.radiation = Math.max(0, Math.min(100, gameState.radiation + chosenAction.effects.radiation));
             gameState.energy = Math.max(0, Math.min(100, gameState.energy + chosenAction.effects.energy));
 
@@ -309,7 +291,7 @@
             const outcomeTitle = isSuccess ? "Mission Accomplished!" : "Mission Failure";
             const outcomeText = isSuccess 
                 ? "You successfully navigated the volatile hazards of Mars and kept your crew alive. Earth sends its commendations."
-                : "The harsh elements of the red planet proved overwhelming. Life support systems failed, ending the Ares-IV mission prematurely.";
+                : "The harsh elements of the red planet proved overwhelming. Life support systems failed, ending the mission prematurely.";
 
             container.innerHTML = `
                 <div class="game-over-screen ${outcomeClass}">
@@ -320,6 +302,7 @@
                     <p style="color: var(--text-muted); margin-bottom: 20px; line-height: 1.6;">${outcomeText}</p>
                     <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 20px;">
                         <span style="font-size: 0.9rem;">Life Support: <strong>${gameState.life}%</strong></span>
+                        <span style="font-size: 0.9rem;">Food: <strong>${gameState.food}%</strong></span>
                         <span style="font-size: 0.9rem;">Radiation Shield: <strong>${gameState.radiation}%</strong></span>
                         <span style="font-size: 0.9rem;">Energy: <strong>${gameState.energy}%</strong></span>
                     </div>
@@ -334,6 +317,7 @@
                 life: 100,
                 radiation: 100,
                 energy: 100,
+                food: 100,
                 currentEventId: "start"
             };
 
