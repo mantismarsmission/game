@@ -83,7 +83,7 @@ const eventsList = {
         choices: [
             {
                 text: "Go to the Main Mission",
-                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
+                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: +5 },
                 nextEvent: "main_mission"
             },
             {
@@ -103,17 +103,17 @@ const eventsList = {
         choices: [
             {
                 text: "Repair the Sojourner rover",
-                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
+                effects: { life: 0, food: -10, radiation: 0, energy: -10, discovery: +5 },
                 nextEvent: "sidequest1"
             },
             {
                 text: "Collect outpost solar panels from a previous mission",
-                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
+                effects: { life: 0, food: +15, radiation: 0, energy: +15, discovery: +5 },
                 nextEvent: "sidequest2"
             },
             {
                 text: "Obtain the supply rocket rations",
-                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
+                effects: { life: +15, food: -5, radiation: 0, energy: -5, discovery: +10 },
                 nextEvent: "sidequest3"
             }
         ]
@@ -163,12 +163,12 @@ const eventsList = {
         choices: [
             {
                 text: "Create a barricade to protect the bedroom",
-                effects: { life: 0, food: 0, radiation: 0, energy: -20, discovery: 0 },
+                effects: { life: 0, food: -10, radiation: 0, energy: -20, discovery: 0 },
                 nextEvent: "event3"
             },
             {
                 text: "Create a barricade to protect the solar panels",
-                effects: { life: -20, food: 0, radiation: 0, energy: 0, discovery: 0 },
+                effects: { life: -20, food: -10, radiation: 0, energy: 0, discovery: 0 },
                 nextEvent: "event2"
             }
         ]
@@ -183,12 +183,12 @@ const eventsList = {
         choices: [
             {
                 text: "Move the gym shields to the greenhouse",
-                effects: { life: -15, food: 0, radiation: -5, energy: 0, discovery: 0 },
+                effects: { life: -15, food: -5, radiation: -5, energy: 0, discovery: +5 },
                 nextEvent: "event6"
             },
             {
                 text: "Leave the greenhouse and take shelter",
-                effects: { life: +5, food: -15, radiation: 0, energy: 0, discovery: 0 },
+                effects: { life: +5, food: -15, radiation: 0, energy: 0, discovery: +5 },
                 nextEvent: "event3"
             }
         ]
@@ -203,12 +203,12 @@ const eventsList = {
         choices: [
             {
                 text: "Use extra power from the ship to run the emergency lights and save the plants, but people will be cold",
-                effects: { life: -10, food: 0, radiation: 0, energy: -10, discovery: 0 },
+                effects: { life: -10, food: +5, radiation: 0, energy: -10, discovery: +5 },
                 nextEvent: "event5"
             },
             {
                 text: "Use extra energy to keep people warm, but some plants are going to die",
-                effects: { life: +5, food: -10, radiation: 0, energy: -20, discovery: 0 },
+                effects: { life: +5, food: -10, radiation: 0, energy: -20, discovery: +5 },
                 nextEvent: "event4"
             }
         ]
@@ -223,12 +223,12 @@ const eventsList = {
         choices: [
             {
                 text: "Fix the energy supply.",
-                effects: { life: 0, food: 0, radiation: -15, energy: +15, discovery: 0 },
+                effects: { life: 0, food: -5, radiation: -15, energy: +15, discovery: 0 },
                 nextEvent: "event5"
             },
             {
                 text: "Fix the radiation shield.",
-                effects: { life: 0, food: 0, radiation: +15, energy: -15, discovery: 0 },
+                effects: { life: 0, food: -5, radiation: +15, energy: -15, discovery: 0 },
                 nextEvent: "event6"
             }
         ]
@@ -243,12 +243,12 @@ const eventsList = {
         choices: [
             {
                 text: "Override the life support system, hence the computer is currently affected by the radiation and is glitching, the computer might start accidentally venting cabin air or shutting off oxygen flow.",
-                effects: { life: +15, food: -10, radiation: +5, energy: 0, discovery: 0 },
+                effects: { life: +15, food: -10, radiation: 0, energy: 0, discovery: +5 },
                 nextEvent: "event6"
             },
             {
                 text: "The radiation might affect and alter food supplies or ruin food crops. You can seal and put away all the ailments to protect them from radiation",
-                effects: { life: -15, food: +10, radiation: +5, energy: 0, discovery: 0 },
+                effects: { life: -15, food: +10, radiation: 0, energy: 0, discovery: +5 },
                 nextEvent: "event6"
             }
         ]
@@ -263,7 +263,7 @@ const eventsList = {
         choices: [
             {
                 text: "Increase greenhouse heating to help the plants",
-                effects: { life: 0, food: +15, radiation: 0, energy: -15, discovery: 0 },
+                effects: { life: 0, food: -5, radiation: 0, energy: -15, discovery: 0 },
                 nextEvent: "solar_flare_warning"
             },
             {
@@ -388,7 +388,7 @@ const eventsList = {
         choices: [
             {
                 text: "Continue with the mission",
-                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
+                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: +5 },
                 nextEvent: "crater_exploration"
             }
         ]
@@ -403,12 +403,12 @@ const eventsList = {
         choices: [
             {
                 text: "Go back to the base to fix the damaged Rover, and investigate the few samples that it has collected.",
-                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
+                effects: { life: 0, food: -5, radiation: 0, energy: -10, discovery: +5 },
                 nextEvent: "back_at_the_base"
             },
             {
                 text: "Try to fix it as best as you can but continue to collect and analyse samples from the crater.",
-                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
+                effects: { life: 0, food: -5, radiation: 0, energy: -10, discovery: +5 },
                 nextEvent: "analyze_samples"
             }
         ]
@@ -428,7 +428,7 @@ const eventsList = {
             },
             {
                 text: "Examine the samples collected by the Rover.",
-                effects: { life: 0, food: 0, radiation: 0, energy: -5, discovery: 0 },
+                effects: { life: 0, food: 0, radiation: 0, energy: -5, discovery: +5 },
                 nextEvent: "analyze_samples"
             }
         ]
@@ -443,7 +443,7 @@ const eventsList = {
         choices: [
             {
                 text: "Report the discovery and stop investigating further.",
-                effects: { life: 0, food: 0, radiation: 0, energy: -5, discovery: 0 },
+                effects: { life: 0, food: 0, radiation: 0, energy: -5, discovery: +5 },
                 nextEvent: "marsquake_event"
             },
             {
