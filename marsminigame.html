@@ -461,8 +461,10 @@
             // 3. SILENT RESULT STORAGE
             // =========================================================================
             function saveSilentMissionResults(finalPoints, finalDepth, finalSamples, outcome) {
+                const scaledDiscovery = Math.min(35, Math.round(finalPoints / 100));
+
                 const payload = {
-                    discoveryPoints: Math.floor(finalPoints),
+                    discoveryPoints: scaledDiscovery,
                     depth: Math.floor(finalDepth),
                     maxDepth: MAX_DEPTH_METERS,
                     samplesCollected: finalSamples,
