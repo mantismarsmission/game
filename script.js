@@ -704,7 +704,7 @@ function renderEndScreen(outcome) {
         outcomeImage = "images/missionaccomplished.png";
         outcomeText = `You survived ${gameState.sol} Sols on Mars, kept all outpost systems above critical thresholds, and achieved ${gameState.discovery} Discovery points!`;
     } else if (outcome === "complete") {
-        outcomeClass = "success";
+        outcomeClass = "complete";
         outcomeTitle = "Mission Complete!";
         outcomeImage = "images/missioncomplete.png";
         outcomeText = `You survived ${gameState.sol} Sols on Mars and kept all outpost systems above critical thresholds, finishing with ${gameState.discovery} Discovery points (35 required for full Mission Accomplished).`;
