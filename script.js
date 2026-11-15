@@ -1,4 +1,4 @@
-https://github.com/mantismarsmission/game/settings// Game State Variables
+// Game State Variables
 let gameState = {
     life: 100,
     food: 100,
