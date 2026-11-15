@@ -43,8 +43,8 @@ const eventsList = {
         tag: "End of Sol Log",
         image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/july/PIA00621.jpg?w=1280&h=612&fit=crop&crop=faces%2Cfocalpoint",
         alt: "Martian horizon at dusk",
-        heading: "Sol Complete — Night Cycle",
-        description: "It was a tough Sol on the surface, and the crew is exhausted. Systems have been stabilized for the freezing Martian night. Rest up—we will continue operations tomorrow on the next Sol.",
+        heading: "Sol Complete",
+        description: "It was a tough day, or as we call it here on mars, a tough Sol. Systems have been stabilized for the freezing Martian night. We will continue operations tomorrow on the next Sol.",
         choices: [
             {
                 text: "Continue to Next Sol",
