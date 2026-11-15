@@ -7,7 +7,7 @@ let gameState = {
     sol: 1,
     currentEventId: "welcome",
     randomEventsRemaining: 2,
-    randomPool: ["dust_tornado", "event2", "event3", "event4", "event5","event6"]
+    randomPool: ["dust_tornado", "event2", "event3", "event4", "event5", "event6"]
 };
 
 // Pick and remove a random event ID from the pool so it cannot repeat
@@ -50,6 +50,81 @@ const eventsList = {
                 text: "Continue to Next Sol",
                 effects: { energy: 0, life: 0, radiation: 0, food: 0 },
                 nextEvent: "RANDOM"
+            }
+        ]
+    },
+
+    "sol_transition_2": {
+        tag: "End of Sol Log",
+        image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/july/PIA00621.jpg?w=1280&h=612&fit=crop&crop=faces%2Cfocalpoint",
+        alt: "Martian horizon at dusk",
+        heading: "Sol 2 Complete",
+        description: "Another grueling Martian day comes to a close. With initial outpost hazards stabilized, Mission Control clears your crew to choose tomorrow's operational priority.",
+        choices: [
+            {
+                text: "Continue to Next Sol",
+                effects: { energy: 0, life: 0, radiation: 0, food: 0 },
+                nextEvent: "mission_choice"
+            }
+        ]
+    },
+
+    "mission_choice": {
+        tag: "Operational Orders",
+        image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/july/PIA00621.jpg?w=1280&h=612&fit=crop&crop=faces%2Cfocalpoint",
+        alt: "Mantis Outpost command console",
+        heading: "Choose Your Priority",
+        description: "Systems are nominal for the new Sol. Will you proceed immediately with the primary biosignature investigation, or divert a team to handle a sidequest?",
+        choices: [
+            {
+                text: "Go to the Main Mission",
+                effects: { energy: 0, life: 0, radiation: 0, food: 0 },
+                nextEvent: "main_mission"
+            },
+            {
+                text: "Do a Sidequest",
+                effects: { energy: 0, life: 0, radiation: 0, food: 0 },
+                nextEvent: "sidequest_menu"
+            }
+        ]
+    },
+
+    "sidequest_menu": {
+        tag: "Side Operations",
+        image: "https://assets.science.nasa.gov/content/dam/science/psd/mars/resources/detail_files/6/6197_mars-human-exploration-art-astronauts-outpost-habitat-full2.jpg",
+        alt: "Martian surface exploration targets",
+        heading: "Select a Sidequest",
+        description: "Three secondary objectives have been flagged near the perimeter. You only have enough time and daylight to complete one before starting the main mission tomorrow.",
+        choices: [
+            {
+                text: "Repair the Sojourner rover",
+                effects: { energy: 0, life: 0, radiation: 0, food: 0 },
+                nextEvent: "sidequest1"
+            },
+            {
+                text: "Collect outpost solar panels from a previous mission",
+                effects: { energy: 0, life: 0, radiation: 0, food: 0 },
+                nextEvent: "sidequest2"
+            },
+            {
+                text: "Obtain the supply rocket rations",
+                effects: { energy: 0, life: 0, radiation: 0, food: 0 },
+                nextEvent: "sidequest3"
+            }
+        ]
+    },
+
+    "sol_transition_sidequest": {
+        tag: "End of Sol Log",
+        image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/july/PIA00621.jpg?w=1280&h=612&fit=crop&crop=faces%2Cfocalpoint",
+        alt: "Martian horizon at dusk",
+        heading: "Sidequest Complete — Sol Ended",
+        description: "The team returns to the habitat as night falls over Elysium Planitia. Tomorrow, all crew members will focus on the main mission.",
+        choices: [
+            {
+                text: "Start Main Mission on Next Sol",
+                effects: { energy: 0, life: 0, radiation: 0, food: 0 },
+                nextEvent: "main_mission"
             }
         ]
     },
@@ -253,6 +328,7 @@ const eventsList = {
             }
         ]
     },
+
     "sidequest1": {
         tag: "Side quest",
         image: "https://assets.science.nasa.gov/dynamicimage/assets/science/psd/solar/2023/09/p/i/a/0/PIA01551-1.jpg?w=1099&h=572&fit=clip&crop=faces%2Cfocalpoint",
@@ -261,9 +337,9 @@ const eventsList = {
         description: "In 1997, the Sojourner rover was sent to Mars by NASA. Now, it is broken due to irreversible damage caused by the Martian climate, having initially become inactive following a communication failure. You will repair it.",
         choices: [
             {
-                text: "Return to the main mission",
+                text: "End the Sol and prepare for the main mission",
                 effects: { life: +15, food: -5, radiation: 0, energy: -5 },
-                nextEvent: "main_mission"
+                nextEvent: "sol_transition_sidequest"
             }
         ]
     },
@@ -276,9 +352,9 @@ const eventsList = {
         description: "You and your team went to collect the outpost solar panels from a previous mission and also found food rations",
         choices: [
             {
-                text: "Return to the main mission",
+                text: "End the Sol and prepare for the main mission",
                 effects: { life: +5, food: +15, radiation: 0, energy: +20 },
-                nextEvent: "main_mission"
+                nextEvent: "sol_transition_sidequest"
             }
         ]
     },
@@ -293,10 +369,11 @@ const eventsList = {
             {
                 text: "When you arrived at the location where the supplies were, you saw that they had been destroyed by the impact and nothing had survived",
                 effects: { life: 0, food: -10, radiation: 0, energy: -10 },
-                nextEvent: "main_mission"
+                nextEvent: "sol_transition_sidequest"
             }
         ]
     },
+
     "main_mission": {
         tag: "MISSION",
         image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2022/june/MarsFingers_Curiosity_1338.jpg?w=1338&h=1193&fit=crop&crop=faces%2Cfocalpoint",
@@ -311,6 +388,7 @@ const eventsList = {
             }
         ]
     },
+
     "crater_exploration": {
         tag: "Jezero Crater exploration",
         image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2022/june/MarsFingers_Curiosity_1338.jpg?w=1338&h=1193&fit=crop&crop=faces%2Cfocalpoint",
@@ -330,6 +408,7 @@ const eventsList = {
             }
         ]
     },
+
     "back_at_the_base": {
         tag: "Going back to the base",
         image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2020/january/HillsRidgesTracks_Curiosity_2725.jpg?w=2000&h=1245&fit=crop&crop=faces%2Cfocalpoint",
@@ -349,6 +428,7 @@ const eventsList = {
             }
         ]
     },
+
     "analyze_samples": {
         tag: "Analysing samples",
         image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/july/TurtleRock_Curiosity_2048.jpg?w=2000&h=1204&fit=crop&crop=faces%2Cfocalpoint",
@@ -368,6 +448,7 @@ const eventsList = {
             }
         ]
     },
+
     "marsquake_event": {
         tag: "Geological Event",
         image: "image2.png",
@@ -387,6 +468,7 @@ const eventsList = {
             }
         ]
     },
+
     "mission_success": {
         tag: "Mission Outcome",
         image: "image1.png",
@@ -442,7 +524,7 @@ function updateGame() {
     document.getElementById("event-heading").innerText = current.heading;
     document.getElementById("event-description").innerHTML = current.description;
 
-    // Dynamically render 1 or 2 buttons based on how many choices the event has
+    // Dynamically render 1, 2, or 3 buttons based on how many choices the event has
     const choicesArea = document.getElementById("choices-area");
     choicesArea.innerHTML = current.choices.map((choice, index) => `
         <button class="choice-btn" id="choice-${index}" onclick="makeChoice(${index})">
@@ -464,21 +546,38 @@ function makeChoice(choiceIndex) {
     gameState.radiation = Math.max(0, Math.min(100, gameState.radiation + chosenAction.effects.radiation));
     gameState.energy = Math.max(0, Math.min(100, gameState.energy + chosenAction.effects.energy));
 
+    // Track whether we just finished the 2nd random event
+    const justFinishedSecondRandom =
+        gameState.randomEventsRemaining === 0 &&
+        gameState.randomPool.length === 4 &&
+        previousId !== "sol_transition_2";
+
     // Determine next event node
     if (previousId === "welcome") {
-        // Day 1: Pick 1st random event
+        // Sol 1: Pick 1st random event
         gameState.randomEventsRemaining--;
         gameState.currentEventId = pickRandomEvent();
     } else if (gameState.randomEventsRemaining > 0 && previousId !== "sol_transition") {
-        // Finished Random Event #1 -> Show end-of-Sol intermission screen
+        // Finished Random Event #1 -> End of Sol 1 screen
         gameState.currentEventId = "sol_transition";
     } else if (previousId === "sol_transition") {
-        // Advance to Sol 2 and pick 2nd (non-repeating) random event
+        // Start Sol 2 -> Pick 2nd (non-repeating) random event
         gameState.sol++;
         gameState.randomEventsRemaining--;
         gameState.currentEventId = pickRandomEvent();
+    } else if (justFinishedSecondRandom) {
+        // Finished Random Event #2 -> End of Sol 2 screen
+        gameState.randomPool = [];
+        gameState.currentEventId = "sol_transition_2";
+    } else if (previousId === "sol_transition_2") {
+        // Start Sol 3 -> Choice between Main Mission or Sidequest
+        gameState.sol++;
+        gameState.currentEventId = "mission_choice";
+    } else if (previousId === "mission_choice" || previousId === "sidequest_menu") {
+        // Same Sol while selecting a sidequest or launching the main mission
+        gameState.currentEventId = chosenAction.nextEvent;
     } else {
-        // From Sol 3 onward, advance the Sol and follow normal decision-tree links
+        // Advance to next Sol for sidequest completion and main mission events
         gameState.sol++;
         gameState.currentEventId = chosenAction.nextEvent;
     }
