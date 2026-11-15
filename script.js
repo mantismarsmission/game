@@ -114,7 +114,25 @@ const eventsList = {
             }
         ]
     },
-
+    "event4": {
+        tag: "Cosmic Event",
+        image: "https://svs.gsfc.nasa.gov/vis/a010000/a014200/a014263/133DaysontheSun_StillSept15.jpg",
+        alt: "This is an image of the sun causing turbulence",
+        heading: "Magnetohydrodynamic Turbulence",
+        description: "The turbulence would be caused by the strong magnetic fields of the sun damaging the radiation shields by supercharging the particles hitting the shield.\n\nIt would affect the energy supply because turbulence steadily degrades solar panels over time and can trigger sudden power surges or short circuits that knock critical systems offline.",
+        choices: [
+            {
+                text: "Fix the energy supply.",
+                effects: { life: 0, food: 0, radiation: -15, energy: +15 },
+                nextEvent: "event5"
+            },
+            {
+                text: "Fix the radiation shield.",
+                effects: { life: 0, food: 0, radiation: +15, energy: -15 },
+                nextEvent: "event5"
+            }
+        ]
+    },
     "event5": {
         tag: "GRB radiation event",
         image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/june/eagle.jpg?w=1876&h=2000&fit=crop&crop=faces%2Cfocalpoint",
