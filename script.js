@@ -43,7 +43,7 @@
             },
           “dust_tornado": {
                 tag: "Xtreme weather.",
-                image: "https://www.nasa.gov/wp-content/uploads/2015/09/21_the_serpent_dust_devil_on_mars_pia15116-br2.jpg?resize=900,597 ",
+                image: "https://www.nasa.gov/wp-content/uploads/2015/09/21_the_serpent_dust_devil_on_mars_pia15116-br2.jpg?resize=900,597",
                 alt: "a dust tornado in mars",
                 heading: "The bad tornados",
                 description: "Two dust tornadoes are heading toward the space base, one toward the solar panels and the other toward the living quarters. You only have enough time to build a barricade to stop one of the approaching tornadoes. Which one will you protect?",
