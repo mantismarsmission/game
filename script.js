@@ -38,7 +38,7 @@ const eventsList = {
         choices: [
             {
                 text: "Begin Mission Logistics",
-                effects: { energy: 0, life: 0, radiation: 0, food: 0 },
+                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
                 nextEvent: "RANDOM"
             }
         ]
@@ -53,7 +53,7 @@ const eventsList = {
         choices: [
             {
                 text: "Continue to Next Sol",
-                effects: { energy: 0, life: 0, radiation: 0, food: 0 },
+                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
                 nextEvent: "RANDOM"
             }
         ]
@@ -68,7 +68,7 @@ const eventsList = {
         choices: [
             {
                 text: "Continue to Next Sol",
-                effects: { energy: 0, life: 0, radiation: 0, food: 0 },
+                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
                 nextEvent: "mission_choice"
             }
         ]
@@ -83,12 +83,12 @@ const eventsList = {
         choices: [
             {
                 text: "Go to the Main Mission",
-                effects: { energy: 0, life: 0, radiation: 0, food: 0 },
+                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
                 nextEvent: "main_mission"
             },
             {
                 text: "Do a Sidequest",
-                effects: { energy: 0, life: 0, radiation: 0, food: 0 },
+                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
                 nextEvent: "sidequest_menu"
             }
         ]
@@ -103,17 +103,17 @@ const eventsList = {
         choices: [
             {
                 text: "Repair the Sojourner rover",
-                effects: { energy: 0, life: 0, radiation: 0, food: 0 },
+                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
                 nextEvent: "sidequest1"
             },
             {
                 text: "Collect outpost solar panels from a previous mission",
-                effects: { energy: 0, life: 0, radiation: 0, food: 0 },
+                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
                 nextEvent: "sidequest2"
             },
             {
                 text: "Obtain the supply rocket rations",
-                effects: { energy: 0, life: 0, radiation: 0, food: 0 },
+                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
                 nextEvent: "sidequest3"
             }
         ]
@@ -128,7 +128,7 @@ const eventsList = {
         choices: [
             {
                 text: "Start Main Mission on Next Sol",
-                effects: { energy: 0, life: 0, radiation: 0, food: 0 },
+                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
                 nextEvent: "main_mission"
             }
         ]
@@ -143,12 +143,12 @@ const eventsList = {
         choices: [
             {
                 text: "Reinforce external solar panels and grid stability.",
-                effects: { energy: +10, life: -5, radiation: 0, food: 0 },
+                effects: { life: -5, food: 0, radiation: 0, energy: +10, discovery: 0 },
                 nextEvent: "event2"
             },
             {
                 text: "Seal airlock bulkheads and run full-system radiation sweeps.",
-                effects: { radiation: +10, energy: -10, life: 0, food: 0 },
+                effects: { life: 0, food: 0, radiation: +10, energy: -10, discovery: 0 },
                 nextEvent: "dust_tornado"
             }
         ]
@@ -163,12 +163,12 @@ const eventsList = {
         choices: [
             {
                 text: "Create a barricade to protect the bedroom",
-                effects: { life: 0, food: 0, radiation: 0, energy: -20 },
+                effects: { life: 0, food: 0, radiation: 0, energy: -20, discovery: 0 },
                 nextEvent: "event3"
             },
             {
                 text: "Create a barricade to protect the solar panels",
-                effects: { life: -20, food: 0, radiation: 0, energy: 0 },
+                effects: { life: -20, food: 0, radiation: 0, energy: 0, discovery: 0 },
                 nextEvent: "event2"
             }
         ]
@@ -183,12 +183,12 @@ const eventsList = {
         choices: [
             {
                 text: "Move the gym shields to the greenhouse",
-                effects: { life: -15, food: +0, radiation: -5, energy: +0 },
+                effects: { life: -15, food: 0, radiation: -5, energy: 0, discovery: 0 },
                 nextEvent: "event6"
             },
             {
                 text: "Leave the greenhouse and take shelter",
-                effects: { life: +5, food: -15, radiation: +0, energy: +0 },
+                effects: { life: +5, food: -15, radiation: 0, energy: 0, discovery: 0 },
                 nextEvent: "event3"
             }
         ]
@@ -203,12 +203,12 @@ const eventsList = {
         choices: [
             {
                 text: "Use extra power from the ship to run the emergency lights and save the plants, but people will be cold",
-                effects: { life: -10, food: +0, radiation: +0, energy: -10 },
+                effects: { life: -10, food: 0, radiation: 0, energy: -10, discovery: 0 },
                 nextEvent: "event5"
             },
             {
                 text: "Use extra energy to keep people warm, but some plants are going to die",
-                effects: { energy: -20, life: +5, radiation: +0, food: -10 },
+                effects: { life: +5, food: -10, radiation: 0, energy: -20, discovery: 0 },
                 nextEvent: "event4"
             }
         ]
@@ -223,12 +223,12 @@ const eventsList = {
         choices: [
             {
                 text: "Fix the energy supply.",
-                effects: { life: 0, food: 0, radiation: -15, energy: +15 },
+                effects: { life: 0, food: 0, radiation: -15, energy: +15, discovery: 0 },
                 nextEvent: "event5"
             },
             {
                 text: "Fix the radiation shield.",
-                effects: { life: 0, food: 0, radiation: +15, energy: -15 },
+                effects: { life: 0, food: 0, radiation: +15, energy: -15, discovery: 0 },
                 nextEvent: "event6"
             }
         ]
@@ -243,12 +243,12 @@ const eventsList = {
         choices: [
             {
                 text: "Override the life support system, hence the computer is currently affected by the radiation and is glitching, the computer might start accidentally venting cabin air or shutting off oxygen flow.",
-                effects: { life: +15, food: -10, radiation: +5, energy: +0 },
+                effects: { life: +15, food: -10, radiation: +5, energy: 0, discovery: 0 },
                 nextEvent: "event6"
             },
             {
                 text: "The radiation might affect and alter food supplies or ruin food crops. You can seal and put away all the ailments to protect them from radiation",
-                effects: { life: -15, food: +10, radiation: +5, energy: +0 },
+                effects: { life: -15, food: +10, radiation: +5, energy: 0, discovery: 0 },
                 nextEvent: "marsquake_event"
             }
         ]
@@ -263,12 +263,12 @@ const eventsList = {
         choices: [
             {
                 text: "Increase greenhouse heating to help the plants",
-                effects: { life: +0, food: +15, radiation: +0, energy: -15 },
+                effects: { life: 0, food: +15, radiation: 0, energy: -15, discovery: 0 },
                 nextEvent: "solar_flare_warning"
             },
             {
                 text: "Reduce greenhouse heating and save energy",
-                effects: { life: +0, food: -15, radiation: +0, energy: +15 },
+                effects: { life: 0, food: -15, radiation: 0, energy: +15, discovery: 0 },
                 nextEvent: "marsquake_event"
             }
         ]
@@ -283,12 +283,12 @@ const eventsList = {
         choices: [
             {
                 text: "Activate emergency magnetic shields (High Energy Drain).",
-                effects: { radiation: +15, energy: -35, life: 0, food: 0 },
+                effects: { life: 0, food: 0, radiation: +15, energy: -35, discovery: 0 },
                 nextEvent: "marsquake_event"
             },
             {
                 text: "Reroute power to life support life-cells and hunker down.",
-                effects: { life: +10, radiation: -20, energy: -15, food: 0 },
+                effects: { life: +10, food: 0, radiation: -20, energy: -15, discovery: 0 },
                 nextEvent: "marsquake_event"
             }
         ]
@@ -303,12 +303,12 @@ const eventsList = {
         choices: [
             {
                 text: "Deploy automated scraping drones to clear collector glass.",
-                effects: { energy: +15, life: -10, radiation: -5, food: 0 },
+                effects: { life: -10, food: 0, radiation: -5, energy: +15, discovery: 0 },
                 nextEvent: "EJEMPLOEVENTO"
             },
             {
                 text: "Conserve all battery reserves and shut down non-essential electronics.",
-                effects: { energy: +5, life: -15, radiation: 0, food: 0 },
+                effects: { life: -15, food: 0, radiation: 0, energy: +5, discovery: 0 },
                 nextEvent: "EJEMPLOEVENTO"
             }
         ]
@@ -323,12 +323,12 @@ const eventsList = {
         choices: [
             {
                 text: "Opción 1.",
-                effects: { energy: +15, life: -10, radiation: -5, food: 0 },
+                effects: { life: -10, food: 0, radiation: -5, energy: +15, discovery: 0 },
                 nextEvent: "marsquake_event"
             },
             {
                 text: "Opcion 2",
-                effects: { energy: +5, life: -15, radiation: 0, food: 0 },
+                effects: { life: -15, food: 0, radiation: 0, energy: +5, discovery: 0 },
                 nextEvent: "marsquake_event"
             }
         ]
@@ -343,7 +343,7 @@ const eventsList = {
         choices: [
             {
                 text: "End the Sol and prepare for the main mission",
-                effects: { life: +15, food: -5, radiation: 0, energy: -5 },
+                effects: { life: +15, food: -5, radiation: 0, energy: -5, discovery: 0 },
                 nextEvent: "sol_transition_sidequest"
             }
         ]
@@ -358,7 +358,7 @@ const eventsList = {
         choices: [
             {
                 text: "End the Sol and prepare for the main mission",
-                effects: { life: +5, food: +15, radiation: 0, energy: +20 },
+                effects: { life: +5, food: +15, radiation: 0, energy: +20, discovery: 0 },
                 nextEvent: "sol_transition_sidequest"
             }
         ]
@@ -373,7 +373,7 @@ const eventsList = {
         choices: [
             {
                 text: "When you arrived at the location where the supplies were, you saw that they had been destroyed by the impact and nothing had survived",
-                effects: { life: 0, food: -10, radiation: 0, energy: -10 },
+                effects: { life: 0, food: -10, radiation: 0, energy: -10, discovery: 0 },
                 nextEvent: "sol_transition_sidequest"
             }
         ]
@@ -388,7 +388,7 @@ const eventsList = {
         choices: [
             {
                 text: "Continue with the mission",
-                effects: { life: 0, food: 0, radiation: 0, energy: 0 },
+                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
                 nextEvent: "crater_exploration"
             }
         ]
@@ -403,13 +403,13 @@ const eventsList = {
         choices: [
             {
                 text: "Go back to the base to fix the damaged Rover, and investigate the few samples that it has collected.",
-                effects: { life: 0, food: 0, radiation: 0, energy: 0 },
+                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
                 nextEvent: "back_at_the_base"
             },
             {
                 text: "Try to fix it as best as you can but continue to collect and analyse samples from the crater.",
-                effects: { life: 0, food: 0, radiation: 0, energy: 0 },
-                nextEvent: "analyze_samples"
+                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
+                nextEvent: "marsquake_event"
             }
         ]
     },
@@ -423,12 +423,12 @@ const eventsList = {
         choices: [
             {
                 text: "Repair the Rover.",
-                effects: { life: -5, food: 0, radiation: 0, energy: -5 },
+                effects: { life: -5, food: 0, radiation: 0, energy: -5, discovery: 0 },
                 nextEvent: "marsquake_event"
             },
             {
                 text: "Examine the samples collected by the Rover.",
-                effects: { life: 0, food: 0, radiation: 0, energy: -5 },
+                effects: { life: 0, food: 0, radiation: 0, energy: -5, discovery: 0 },
                 nextEvent: "analyze_samples"
             }
         ]
@@ -443,12 +443,12 @@ const eventsList = {
         choices: [
             {
                 text: "Report the discovery and stop investigating further.",
-                effects: { life: 0, food: 0, radiation: 0, energy: -5 },
+                effects: { life: 0, food: 0, radiation: 0, energy: -5, discovery: 0 },
                 nextEvent: "marsquake_event"
             },
             {
                 text: "Continue to search through the Jezero Crater, and collect more samples regarding the traces you have found.",
-                effects: { life: 0, food: 0, radiation: 0, energy: 0 },
+                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
                 nextEvent: "minigame_descent"
             }
         ]
@@ -464,7 +464,7 @@ const eventsList = {
         choices: [
             {
                 text: "Continue Mission",
-                effects: { life: 0, food: 0, radiation: 0, energy: 0 },
+                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
                 nextEvent: "marsquake_event"
             }
         ]
@@ -479,12 +479,12 @@ const eventsList = {
         choices: [
             {
                 text: "Manually recalibrate the sub-surface pressure release valves.",
-                effects: { life: +15, energy: -15, radiation: -5, food: 0 },
+                effects: { life: +15, food: 0, radiation: -5, energy: -15, discovery: 0 },
                 nextEvent: "mission_success"
             },
             {
                 text: "Rely on automated fail-safes and secure internal loose equipment.",
-                effects: { life: -20, energy: -10, radiation: 0, food: 0 },
+                effects: { life: -20, food: 0, radiation: 0, energy: -10, discovery: 0 },
                 nextEvent: "check_failure"
             }
         ]
@@ -494,20 +494,20 @@ const eventsList = {
         tag: "Mission Outcome",
         image: "images/missionaccomplished.png",
         alt: "Astronaut drawing showing that the mission was accomplished",
-        heading: "Outpost Stabilized: Success!",
-        description: "Through calculated risks and stellar resource management, you have weathered the planet's harshest extremes. The colony beacons transmit a secure status back to mission control on Earth.",
+        heading: "Outpost Stabilized: Accomplished!",
+        description: "Through calculated risks, stellar resource management, and groundbreaking scientific discoveries, you have weathered the planet's harshest extremes.",
         isEnd: true,
-        success: true
+        outcomeType: "accomplished"
     },
 
     "mission_complete": {
         tag: "Mission Outcome",
         image: "images/missioncomplete.png",
         alt: "Astronaut drawing showing that the mission was just barely completed",
-        heading: "Outpost Stabilized: Success!",
-        description: "Through calculated risks and stellar resource management, you have weathered the planet's harshest extremes. The colony beacons transmit a secure status back to mission control on Earth.",
+        heading: "Outpost Stabilized: Complete!",
+        description: "Your crew survived the harsh conditions of Mars and maintained critical outpost systems, though major scientific discoveries remain to be uncovered.",
         isEnd: true,
-        success: true
+        outcomeType: "complete"
     },
 
     "mission_failure": {
@@ -517,22 +517,41 @@ const eventsList = {
         heading: "Catastrophic System Failure",
         description: "Critical thresholds have been breached. Whether due to radiation poisoning, oxygen failure, or total power collapse, the Ares-IV outpost has gone dark.",
         isEnd: true,
-        success: false
+        outcomeType: "failed"
     }
 };
 
+// Evaluate final mission outcome based on thresholds
+function evaluateMissionOutcome() {
+    const meetsMinimums =
+        gameState.life >= 70 &&
+        gameState.food >= 30 &&
+        gameState.radiation >= 80 &&
+        gameState.energy >= 50;
+
+    if (!meetsMinimums) {
+        return "failed";
+    }
+
+    if (gameState.discovery >= 35) {
+        return "accomplished";
+    }
+
+    return "complete";
+}
+
 // Update UI elements based on the current active event ID
 function updateGame() {
-    // Check stat bounds or premature failure triggers
+    // Check premature collapse triggers (0% on critical stats)
     if (gameState.life <= 0 || gameState.radiation <= 0 || gameState.energy <= 0) {
-        renderEndScreen(false);
+        renderEndScreen("failed");
         return;
     }
 
     const current = eventsList[gameState.currentEventId];
 
     if (current.isEnd) {
-        renderEndScreen(current.success);
+        renderEndScreen(evaluateMissionOutcome());
         return;
     }
 
@@ -572,21 +591,24 @@ function updateGame() {
             </button>
         `;
 
+        const unlockContinue = (points) => {
+            gameState.discovery += points;
+            const continueBtn = document.getElementById("choice-0");
+            const continueText = document.getElementById("choice-0-text");
+            if (continueBtn && continueText) {
+                continueBtn.disabled = false;
+                continueBtn.style.opacity = "1";
+                continueBtn.style.cursor = "pointer";
+                continueText.innerText = `${current.choices[0].text} (+${points} Discovery)`;
+            }
+        };
+
         const iframe = document.getElementById("minigame-frame");
         iframe.addEventListener("load", () => {
             try {
                 iframe.contentWindow.addEventListener("marsMiniGameOver", (e) => {
                     const results = e.detail || {};
-                    gameState.discovery += results.discoveryPoints || 0;
-
-                    const continueBtn = document.getElementById("choice-0");
-                    const continueText = document.getElementById("choice-0-text");
-                    if (continueBtn && continueText) {
-                        continueBtn.disabled = false;
-                        continueBtn.style.opacity = "1";
-                        continueBtn.style.cursor = "pointer";
-                        continueText.innerText = `${current.choices[0].text} (+${Math.floor(results.discoveryPoints || 0)} Discovery)`;
-                    }
+                    unlockContinue(results.discoveryPoints || 0);
                 });
             } catch (err) {
                 // Fallback if opened via file:// where cross-frame event access may be restricted
@@ -596,16 +618,7 @@ function updateGame() {
                         const results = JSON.parse(raw);
                         localStorage.removeItem("mars_tunnel_descent_results");
                         clearInterval(pollInterval);
-                        gameState.discovery += results.discoveryPoints || 0;
-
-                        const continueBtn = document.getElementById("choice-0");
-                        const continueText = document.getElementById("choice-0-text");
-                        if (continueBtn && continueText) {
-                            continueBtn.disabled = false;
-                            continueBtn.style.opacity = "1";
-                            continueBtn.style.cursor = "pointer";
-                            continueText.innerText = `${current.choices[0].text} (+${Math.floor(results.discoveryPoints || 0)} Discovery)`;
-                        }
+                        unlockContinue(results.discoveryPoints || 0);
                     }
                 }, 500);
             }
@@ -636,10 +649,11 @@ function makeChoice(choiceIndex) {
     const chosenAction = current.choices[choiceIndex];
 
     // Apply stats changes
-    gameState.life = Math.max(0, Math.min(100, gameState.life + chosenAction.effects.life));
-    gameState.food = Math.max(0, Math.min(100, gameState.food + chosenAction.effects.food));
-    gameState.radiation = Math.max(0, Math.min(100, gameState.radiation + chosenAction.effects.radiation));
-    gameState.energy = Math.max(0, Math.min(100, gameState.energy + chosenAction.effects.energy));
+    gameState.life = Math.max(0, Math.min(100, gameState.life + (chosenAction.effects.life || 0)));
+    gameState.food = Math.max(0, Math.min(100, gameState.food + (chosenAction.effects.food || 0)));
+    gameState.radiation = Math.max(0, Math.min(100, gameState.radiation + (chosenAction.effects.radiation || 0)));
+    gameState.energy = Math.max(0, Math.min(100, gameState.energy + (chosenAction.effects.energy || 0)));
+    gameState.discovery = Math.max(0, gameState.discovery + (chosenAction.effects.discovery || 0));
 
     // Determine next event node
     if (previousId === "welcome") {
@@ -673,34 +687,47 @@ function makeChoice(choiceIndex) {
 
     // Special helper check for dynamic failure route
     if (gameState.currentEventId === "check_failure") {
-        renderEndScreen(false);
+        renderEndScreen("failed");
         return;
     }
 
     updateGame();
 }
 
-// Render end screens (Success or Failure)
-function renderEndScreen(isSuccess) {
+// Render end screens ("accomplished", "complete", or "failed")
+function renderEndScreen(outcome) {
     const container = document.querySelector(".game-container");
-    const outcomeClass = isSuccess ? "success" : "failure";
-    const outcomeTitle = isSuccess ? "Mission Accomplished!" : "Mission Failure";
-    const outcomeText = isSuccess
-        ? `You survived ${gameState.sol} Sols on Mars and kept your crew alive. Earth sends its commendations.`
-        : `The harsh elements of the red planet proved overwhelming on Sol ${gameState.sol}. Life support systems failed, ending the mission prematurely.`;
+
+    let outcomeClass = "failure";
+    let outcomeTitle = "Mission Failure";
+    let outcomeImage = "images/missionfailed.png";
+    let outcomeText = `Critical survival thresholds were not met by Sol ${gameState.sol} (Required: Life ≥ 70%, Food ≥ 30%, Shielding ≥ 80%, Energy ≥ 50%).`;
+
+    if (outcome === "accomplished") {
+        outcomeClass = "success";
+        outcomeTitle = "Mission Accomplished!";
+        outcomeImage = "images/missionaccomplished.png";
+        outcomeText = `You survived ${gameState.sol} Sols on Mars, kept all outpost systems above critical thresholds, and achieved ${gameState.discovery} Discovery points!`;
+    } else if (outcome === "complete") {
+        outcomeClass = "success";
+        outcomeTitle = "Mission Complete!";
+        outcomeImage = "images/missioncomplete.png";
+        outcomeText = `You survived ${gameState.sol} Sols on Mars and kept all outpost systems above critical thresholds, finishing with ${gameState.discovery} Discovery points (35 required for full Mission Accomplished).`;
+    }
 
     container.innerHTML = `
         <div class="game-over-screen ${outcomeClass}">
             <div class="visual-area" style="height: 350px; margin-bottom: 20px; border-radius: 8px;">
-                <img src="${isSuccess ? 'images/missionaccomplished.png' : 'images/missionfailed.png'}" alt="Mission final status view">
+                <img src="${outcomeImage}" alt="${outcomeTitle}">
             </div>
             <h2>${outcomeTitle}</h2>
             <p style="color: var(--text-muted); margin-bottom: 20px; line-height: 1.6;">${outcomeText}</p>
-            <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 20px;">
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 20px;">
                 <span style="font-size: 0.9rem;">Life Support: <strong>${gameState.life}%</strong></span>
                 <span style="font-size: 0.9rem;">Food: <strong>${gameState.food}%</strong></span>
                 <span style="font-size: 0.9rem;">Radiation Shield: <strong>${gameState.radiation}%</strong></span>
                 <span style="font-size: 0.9rem;">Energy: <strong>${gameState.energy}%</strong></span>
+                <span style="font-size: 0.9rem;">Discovery: <strong>${gameState.discovery}</strong></span>
             </div>
             <button class="restart-btn" onclick="restartGame()">Restart Mission</button>
         </div>
