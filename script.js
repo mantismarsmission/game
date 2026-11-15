@@ -37,11 +37,11 @@
                     {
                         text: "Seal airlock bulkheads and run full-system radiation sweeps.",
                         effects: { radiation: +10, energy: -10, life: 0 , food: 0},
-                        nextEvent: "dust_storm_approach"
+                        nextEvent: "dust_tornado"
                     }
                 ]
             },
-          “dust_tornado": {
+          "dust_tornado": {
                 tag: "Xtreme weather.",
                 image: "https://www.nasa.gov/wp-content/uploads/2015/09/21_the_serpent_dust_devil_on_mars_pia15116-br2.jpg?resize=900,597",
                 alt: "a dust tornado in mars",
