@@ -45,7 +45,7 @@ const eventsList = {
         image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/july/PIA00621.jpg?w=1280&h=612&fit=crop&crop=faces%2Cfocalpoint",
         alt: "Martian horizon at dusk",
         heading: "Sol Complete",
-        description: "It was a tough day, or as we call it here on mars, a tough Sol. Systems have been stabilized for the freezing Martian night. We will continue operations tomorrow on the next Sol.",
+        description: "It was a tough day, or as we call it here on Mars, a tough Sol. Systems have been stabilized for the freezing Martian night. We will continue operations tomorrow on the next Sol.",
         choices: [
             {
                 text: "Continue to Next Sol",
@@ -383,9 +383,9 @@ const eventsList = {
         description: "A sample collected by NASA’s Perseverance Mars rover from an ancient dry riverbed in Jezero Crater could preserve evidence of ancient microbial life. Taken from a rock named ‘Cheyava Falls’, the sample, called ‘Sapphire Canyon’ contains potential biosignatures. The astronauts head down to check if more evidence of life resides in the underground of Mars.",
         choices: [
             {
-                text: "Continue.",
+                text: "Continue with the mission",
                 effects: { life: 0, food: 0, radiation: 0, energy: 0 },
-                nextEvent: "marsquake_event"
+                nextEvent: "crater_exploration"
             }
         ]
     },
