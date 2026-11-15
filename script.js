@@ -72,7 +72,7 @@ const eventsList = {
 
     "mission_choice": {
         tag: "Operational Orders",
-        image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/july/PIA00621.jpg?w=1280&h=612&fit=crop&crop=faces%2Cfocalpoint",
+        image: "https://www.asc-csa.gc.ca/images/recherche/tiles/5fa79378-dbb6-4391-9e70-1decf94d34ff.jpg",
         alt: "Mantis Outpost command console",
         heading: "Choose Your Priority",
         description: "Systems are nominal for the new Sol. Will you proceed immediately with the primary biosignature investigation, or divert a team to handle a sidequest?",
