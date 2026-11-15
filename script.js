@@ -409,7 +409,7 @@ const eventsList = {
             {
                 text: "Try to fix it as best as you can but continue to collect and analyse samples from the crater.",
                 effects: { life: 0, food: 0, radiation: 0, energy: 0 },
-                nextEvent: "marsquake_event"
+                nextEvent: "analyze_samples"
             }
         ]
     },
