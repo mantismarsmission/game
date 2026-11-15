@@ -431,7 +431,7 @@ const eventsList = {
         ]
     },
 
-    "analyze_samples": {
+"analyze_samples": {
         tag: "Analysing samples",
         image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/july/TurtleRock_Curiosity_2048.jpg?w=2000&h=1204&fit=crop&crop=faces%2Cfocalpoint",
         alt: "Biosignatures in Jezero Crater",
@@ -445,6 +445,22 @@ const eventsList = {
             },
             {
                 text: "Continue to search through the Jezero Crater, and collect more samples regarding the traces you have found.",
+                effects: { life: 0, food: 0, radiation: 0, energy: 0 },
+                nextEvent: "minigame_descent"
+            }
+        ]
+    },
+
+    "minigame_descent": {
+        tag: "Subsurface Recon",
+        image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/july/TurtleRock_Curiosity_2048.jpg?w=2000&h=1204&fit=crop&crop=faces%2Cfocalpoint",
+        alt: "Subsurface lava tube reconnaissance drone",
+        heading: "Subsurface Descent: Jezero Lava Tube",
+        description: "Deploy the scout drone into the subterranean cavern to collect ancient microbial biosignatures. Complete the descent before continuing.",
+        isMinigame: true,
+        choices: [
+            {
+                text: "Continue Mission",
                 effects: { life: 0, food: 0, radiation: 0, energy: 0 },
                 nextEvent: "marsquake_event"
             }
@@ -525,105 +541,86 @@ function updateGame() {
     document.getElementById("stat-radiation").innerText = `${gameState.radiation}%`;
     document.getElementById("stat-energy").innerText = `${gameState.energy}%`;
 
-    // Update visual elements
-    document.getElementById("event-tag").innerText = current.tag;
-    const imgElement = document.getElementById("event-image");
-    imgElement.src = current.image;
-    imgElement.alt = current.alt;
-
     // Update narrative copy
     document.getElementById("event-heading").innerText = current.heading;
     document.getElementById("event-description").innerHTML = current.description;
 
-    // Dynamically render 1, 2, or 3 buttons based on how many choices the event has
+    const visualContainer = document.getElementById("visual-container");
     const choicesArea = document.getElementById("choices-area");
+
+    // Special handling for the embedded Subsurface Descent minigame
+    if (current.isMinigame) {
+        visualContainer.style.height = "560px";
+        visualContainer.innerHTML = `
+            <iframe
+                id="minigame-frame"
+                src="marsminigame.html"
+                title="Life on Mars: Subsurface Descent"
+                style="width: 100%; height: 100%; border: none; border-radius: 8px; display: block;"
+            ></iframe>
+        `;
+
+        // Disable Continue button until the drone finishes its descent
+        choicesArea.innerHTML = `
+            <button class="choice-btn" id="choice-0" onclick="makeChoice(0)" disabled style="opacity: 0.5; cursor: not-allowed;">
+                <span id="choice-0-text">Complete Drone Descent to Continue...</span>
+                <span class="arrow">→</span>
+            </button>
+        `;
+
+        const iframe = document.getElementById("minigame-frame");
+        iframe.addEventListener("load", () => {
+            try {
+                iframe.contentWindow.addEventListener("marsMiniGameOver", (e) => {
+                    const results = e.detail || {};
+                    gameState.discovery += results.discoveryPoints || 0;
+
+                    const continueBtn = document.getElementById("choice-0");
+                    const continueText = document.getElementById("choice-0-text");
+                    if (continueBtn && continueText) {
+                        continueBtn.disabled = false;
+                        continueBtn.style.opacity = "1";
+                        continueBtn.style.cursor = "pointer";
+                        continueText.innerText = `${current.choices[0].text} (+${Math.floor(results.discoveryPoints || 0)} Discovery)`;
+                    }
+                });
+            } catch (err) {
+                // Fallback if opened via file:// where cross-frame event access may be restricted
+                const pollInterval = setInterval(() => {
+                    const raw = localStorage.getItem("mars_tunnel_descent_results");
+                    if (raw) {
+                        const results = JSON.parse(raw);
+                        localStorage.removeItem("mars_tunnel_descent_results");
+                        clearInterval(pollInterval);
+                        gameState.discovery += results.discoveryPoints || 0;
+
+                        const continueBtn = document.getElementById("choice-0");
+                        const continueText = document.getElementById("choice-0-text");
+                        if (continueBtn && continueText) {
+                            continueBtn.disabled = false;
+                            continueBtn.style.opacity = "1";
+                            continueBtn.style.cursor = "pointer";
+                            continueText.innerText = `${current.choices[0].text} (+${Math.floor(results.discoveryPoints || 0)} Discovery)`;
+                        }
+                    }
+                }, 500);
+            }
+        });
+        return;
+    }
+
+    // Restore normal image layout for standard events
+    visualContainer.style.height = "";
+    visualContainer.innerHTML = `
+        <div class="event-badge" id="event-tag">${current.tag}</div>
+        <img id="event-image" src="${current.image}" alt="${current.alt}">
+    `;
+
+    // Dynamically render 1, 2, or 3 buttons based on how many choices the event has
     choicesArea.innerHTML = current.choices.map((choice, index) => `
         <button class="choice-btn" id="choice-${index}" onclick="makeChoice(${index})">
             <span id="choice-${index}-text">${choice.text}</span>
             <span class="arrow">→</span>
         </button>
     `).join("");
-}
-
-// Handle button selections
-function makeChoice(choiceIndex) {
-    const previousId = gameState.currentEventId;
-    const current = eventsList[previousId];
-    const chosenAction = current.choices[choiceIndex];
-
-    // Apply stats changes
-    gameState.life = Math.max(0, Math.min(100, gameState.life + chosenAction.effects.life));
-    gameState.food = Math.max(0, Math.min(100, gameState.food + chosenAction.effects.food));
-    gameState.radiation = Math.max(0, Math.min(100, gameState.radiation + chosenAction.effects.radiation));
-    gameState.energy = Math.max(0, Math.min(100, gameState.energy + chosenAction.effects.energy));
-
-    // Determine next event node
-    if (previousId === "welcome") {
-        // Sol 1: Pick 1st random event
-        gameState.randomEventsRemaining--;
-        gameState.currentEventId = pickRandomEvent();
-    } else if (gameState.inRandomPhase && gameState.randomEventsRemaining > 0 && previousId !== "sol_transition") {
-        // Finished Random Event #1 -> End of Sol 1 screen
-        gameState.currentEventId = "sol_transition";
-    } else if (previousId === "sol_transition") {
-        // Start Sol 2 -> Pick 2nd (non-repeating) random event
-        gameState.sol++;
-        gameState.randomEventsRemaining--;
-        gameState.currentEventId = pickRandomEvent();
-    } else if (gameState.inRandomPhase && gameState.randomEventsRemaining === 0) {
-        // Finished Random Event #2 -> End of Sol 2 screen
-        gameState.inRandomPhase = false;
-        gameState.currentEventId = "sol_transition_2";
-    } else if (previousId === "sol_transition_2") {
-        // Start Sol 3 -> Choice between Main Mission or Sidequest
-        gameState.sol++;
-        gameState.currentEventId = "mission_choice";
-    } else if (previousId === "mission_choice" || previousId === "sidequest_menu") {
-        // Same Sol while selecting a sidequest or launching the main mission
-        gameState.currentEventId = chosenAction.nextEvent;
-    } else {
-        // Advance to next Sol for sidequest completion and main mission events
-        gameState.sol++;
-        gameState.currentEventId = chosenAction.nextEvent;
-    }
-
-    // Special helper check for dynamic failure route
-    if (gameState.currentEventId === "check_failure") {
-        renderEndScreen(false);
-        return;
-    }
-
-    updateGame();
-}
-
-// Render end screens (Success or Failure)
-function renderEndScreen(isSuccess) {
-    const container = document.querySelector(".game-container");
-    const outcomeClass = isSuccess ? "success" : "failure";
-    const outcomeTitle = isSuccess ? "Mission Accomplished!" : "Mission Failure";
-    const outcomeText = isSuccess
-        ? `You survived ${gameState.sol} Sols on Mars and kept your crew alive. Earth sends its commendations.`
-        : `The harsh elements of the red planet proved overwhelming on Sol ${gameState.sol}. Life support systems failed, ending the mission prematurely.`;
-
-    container.innerHTML = `
-        <div class="game-over-screen ${outcomeClass}">
-            <div class="visual-area" style="height: 350px; margin-bottom: 20px; border-radius: 8px;">
-                <img src="${isSuccess ? 'images/missionaccomplished.png' : 'images/missionfailed.png'}" alt="Mission final status view">
-            </div>
-            <h2>${outcomeTitle}</h2>
-            <p style="color: var(--text-muted); margin-bottom: 20px; line-height: 1.6;">${outcomeText}</p>
-            <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 20px;">
-                <span style="font-size: 0.9rem;">Life Support: <strong>${gameState.life}%</strong></span>
-                <span style="font-size: 0.9rem;">Food: <strong>${gameState.food}%</strong></span>
-                <span style="font-size: 0.9rem;">Radiation Shield: <strong>${gameState.radiation}%</strong></span>
-                <span style="font-size: 0.9rem;">Energy: <strong>${gameState.energy}%</strong></span>
-            </div>
-            <button class="restart-btn" onclick="restartGame()">Restart Mission</button>
-        </div>
-    `;
-}
-
-// Reset game back to initial state
-function restartGame() {
-    location.reload();
 }
