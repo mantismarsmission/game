@@ -51,7 +51,7 @@
                     {
                         text: "Move the gym shields to the greenhouse",
                         effects: { life: -15, food: +0, radiation: -5, energy: +0 },
-                        nextEvent: "solar_flare_warning"
+                        nextEvent: "event6"
                     },
                     {
                         text: "Leave the greenhouse and take shelter",
@@ -61,6 +61,25 @@
                 ]
             },
         
+            "event6": {
+                tag: "Extreme temperature",
+                image: "https://www.nasa.gov/wp-content/uploads/2017/04/lunar_greenhouse_demo_u_of_az_09_b.jpg?resize=2000,1541",
+                alt: "This is an example of a greenhouse in Mars",
+                heading: "Extreme Temperatures on Mars",
+                description: "Everything seemed normal at the Mars research base. The astronauts had been growing their own vegetables inside a greenhouse and depending on solar panels for electricity. But that night something went wrong. The temperature outside began to drop rapidly. Mars already had an average temperature of approximately −65°C (−85°F), but the approaching Martian night brought even colder conditions. Suddenly, an alarm echoed through the base. WARNING: GREENHOUSE TEMPERATURE DROPPING, LOW BATTERY POWER. The extreme cold was making battery performance more difficult, while the heating system continued demanding electricity. Outside, the solar panels could not generate power during the night. The astronauts faced a terrifying possibility: if they couldn't maintain the greenhouse temperature, they could lose their crops. Without fresh food, their already limited food supplies would become an even bigger problem. They had to find a solution before the greenhouse became too cold.",
+                choices: [
+                    {
+                        text: "Increase greenhouse heating to help the plants",
+                        effects: { life: +0, food: +15, radiation: +0, energy: -15 },
+                        nextEvent: "solar_flare_warning"
+                    },
+                    {
+                        text: "Reduce greenhouse heating and save energy",
+                        effects: {  life: +0, food: -15, radiation: +0, energy: +15 },
+                        nextEvent: "marsquake_event"
+                    }
+                ]
+            },
 
             "solar_flare_warning": {
                 tag: "Space Weather Alert",
