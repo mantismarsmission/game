@@ -93,7 +93,7 @@ const eventsList = {
 
     "sidequest_menu": {
         tag: "Side Operations",
-        image: "https://assets.science.nasa.gov/content/dam/science/psd/mars/resources/detail_files/6/6197_mars-human-exploration-art-astronauts-outpost-habitat-full2.jpg",
+        image: "https://assets.science.nasa.gov/dynamicimage/assets/science/psd/solar/2023/07/rover2-1.jpg?w=1200&h=900&fit=crop&crop=faces%2Cfocalpoint",
         alt: "Martian surface exploration targets",
         heading: "Select a Sidequest",
         description: "Three secondary objectives have been flagged near the perimeter. You only have enough time and daylight to complete one before starting the main mission tomorrow.",
