@@ -429,6 +429,25 @@ const eventsList = {
             {
                 text: "Examine the samples collected by the Rover.",
                 effects: { life: 0, food: 0, radiation: 0, energy: -5, discovery: +5 },
+                nextEvent: "analyze_samples_base"
+            }
+        ]
+    },
+        "analyze_samples_base": {
+        tag: "Analyzing samples",
+        image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2025/september/LeopardSpots_Perseverance_1648.jpg?w=1536&h=1118&fit=crop&crop=faces%2Cfocalpoint",
+        alt: "analyzing samples",
+        heading: "Analyzing samples",
+        description: "As you analyse the samples, there seems to be traces of ancient microbes, what do you do?",
+        choices: [
+            {
+                text: "Report the discovery and stop investigating further.",
+                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
+                nextEvent: "marsquake_event"
+            },
+            {
+                text: "Go back to the crater.",
+                effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
                 nextEvent: "analyze_samples"
             }
         ]
