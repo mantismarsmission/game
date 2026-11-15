@@ -4,22 +4,24 @@ let gameState = {
     food: 100,
     radiation: 100,
     energy: 100,
-    currentEventId: "welcome"
+    sol: 1,
+    currentEventId: "welcome",
+    randomEventsRemaining: 2,
+    randomPool: ["dust_tornado", "event2", "event3", "event4", "event5","event6"]
 };
+
+// Pick and remove a random event ID from the pool so it cannot repeat
+function pickRandomEvent() {
+    const randomIndex = Math.floor(Math.random() * gameState.randomPool.length);
+    const chosenId = gameState.randomPool[randomIndex];
+    gameState.randomPool.splice(randomIndex, 1);
+    return chosenId;
+}
 
 /* 
   ========================================================================
   MISSIONS & EVENTS LIST 
   ========================================================================
-  You can easily add or modify events by copy-pasting the structure below.
-  - id: Unique string identifier for the event node.
-  - tag: Badge text displayed over the image.
-  - image: Placeholder image path ("image1.png", "image2.png", etc.)
-  - alt: Alt text for accessibility.
-  - heading: Title of the event card.
-  - description: Narrative text explaining the scenario.
-  - choices: Array containing 1 or 2 decisions, their stat impacts, and 
-             where they lead next (`nextEvent`).
 */
 const eventsList = {
     "welcome": {
@@ -32,7 +34,22 @@ const eventsList = {
             {
                 text: "Begin Mission Logistics",
                 effects: { energy: 0, life: 0, radiation: 0, food: 0 },
-                nextEvent: "start"
+                nextEvent: "RANDOM"
+            }
+        ]
+    },
+
+    "sol_transition": {
+        tag: "End of Sol Log",
+        image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/july/PIA00621.jpg?w=1280&h=612&fit=crop&crop=faces%2Cfocalpoint",
+        alt: "Martian horizon at dusk",
+        heading: "Sol Complete — Night Cycle",
+        description: "It was a tough Sol on the surface, and the crew is exhausted. Systems have been stabilized for the freezing Martian night. Rest up—we will continue operations tomorrow on the next Sol.",
+        choices: [
+            {
+                text: "Continue to Next Sol",
+                effects: { energy: 0, life: 0, radiation: 0, food: 0 },
+                nextEvent: "RANDOM"
             }
         ]
     },
@@ -56,6 +73,7 @@ const eventsList = {
             }
         ]
     },
+
     "dust_tornado": {
         tag: "Xtreme weather",
         image: "https://www.nasa.gov/wp-content/uploads/2015/09/21_the_serpent_dust_devil_on_mars_pia15116-br2.jpg?resize=900,597",
@@ -75,6 +93,7 @@ const eventsList = {
             }
         ]
     },
+
     "event2": {
         tag: "Cosmic event",
         image: "https://science.nasa.gov/wp-content/uploads/2023/04/hubble_friday_07302015-jpg.webp?resize=900,658",
@@ -94,7 +113,7 @@ const eventsList = {
             }
         ]
     },
-    
+
     "event3": {
         tag: "Weather event",
         image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2002/december/northmars_mgs_big.jpg?w=2000&h=1500&fit=crop&crop=faces%2Cfocalpoint",
@@ -114,6 +133,7 @@ const eventsList = {
             }
         ]
     },
+
     "event4": {
         tag: "Cosmic Event",
         image: "https://svs.gsfc.nasa.gov/vis/a010000/a014200/a014263/133DaysontheSun_StillSept15.jpg",
@@ -133,6 +153,7 @@ const eventsList = {
             }
         ]
     },
+
     "event5": {
         tag: "GRB radiation event",
         image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/june/eagle.jpg?w=1876&h=2000&fit=crop&crop=faces%2Cfocalpoint",
@@ -172,6 +193,7 @@ const eventsList = {
             }
         ]
     },
+
     "solar_flare_warning": {
         tag: "Space Weather Alert",
         image: "image2.png",
@@ -288,6 +310,9 @@ function updateGame() {
         return;
     }
 
+    // Update Sol day counter in header
+    document.getElementById("day-counter").innerText = `Sol ${gameState.sol}`;
+
     // Update stats display
     document.getElementById("stat-life").innerText = `${gameState.life}%`;
     document.getElementById("stat-food").innerText = `${gameState.food}%`;
@@ -316,7 +341,8 @@ function updateGame() {
 
 // Handle button selections
 function makeChoice(choiceIndex) {
-    const current = eventsList[gameState.currentEventId];
+    const previousId = gameState.currentEventId;
+    const current = eventsList[previousId];
     const chosenAction = current.choices[choiceIndex];
 
     // Apply stats changes
@@ -325,8 +351,24 @@ function makeChoice(choiceIndex) {
     gameState.radiation = Math.max(0, Math.min(100, gameState.radiation + chosenAction.effects.radiation));
     gameState.energy = Math.max(0, Math.min(100, gameState.energy + chosenAction.effects.energy));
 
-    // Move to next event node
-    gameState.currentEventId = chosenAction.nextEvent;
+    // Determine next event node
+    if (previousId === "welcome") {
+        // Day 1: Pick 1st random event
+        gameState.randomEventsRemaining--;
+        gameState.currentEventId = pickRandomEvent();
+    } else if (gameState.randomEventsRemaining > 0 && previousId !== "sol_transition") {
+        // Finished Random Event #1 -> Show end-of-Sol intermission screen
+        gameState.currentEventId = "sol_transition";
+    } else if (previousId === "sol_transition") {
+        // Advance to Sol 2 and pick 2nd (non-repeating) random event
+        gameState.sol++;
+        gameState.randomEventsRemaining--;
+        gameState.currentEventId = pickRandomEvent();
+    } else {
+        // From Sol 3 onward, advance the Sol and follow normal decision-tree links
+        gameState.sol++;
+        gameState.currentEventId = chosenAction.nextEvent;
+    }
 
     // Special helper check for dynamic failure route
     if (gameState.currentEventId === "check_failure") {
@@ -343,8 +385,8 @@ function renderEndScreen(isSuccess) {
     const outcomeClass = isSuccess ? "success" : "failure";
     const outcomeTitle = isSuccess ? "Mission Accomplished!" : "Mission Failure";
     const outcomeText = isSuccess
-        ? "You successfully navigated the volatile hazards of Mars and kept your crew alive. Earth sends its commendations."
-        : "The harsh elements of the red planet proved overwhelming. Life support systems failed, ending the mission prematurely.";
+        ? `You survived ${gameState.sol} Sols on Mars and kept your crew alive. Earth sends its commendations.`
+        : `The harsh elements of the red planet proved overwhelming on Sol ${gameState.sol}. Life support systems failed, ending the mission prematurely.`;
 
     container.innerHTML = `
         <div class="game-over-screen ${outcomeClass}">
@@ -366,13 +408,5 @@ function renderEndScreen(isSuccess) {
 
 // Reset game back to initial state
 function restartGame() {
-    gameState = {
-        life: 100,
-        radiation: 100,
-        energy: 100,
-        food: 100,
-        currentEventId: "welcome"
-    };
-
     location.reload();
 }
