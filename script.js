@@ -712,7 +712,7 @@ function renderEndScreen(outcome) {
 
     container.innerHTML = `
         <div class="game-over-screen ${outcomeClass}">
-            <div class="visual-area" style="height: 400px; margin-bottom: 20px; border-radius: 8px;">
+            <div class="visual-area" style="height: 450px; margin-bottom: 20px; border-radius: 8px;">
                 <img src="${outcomeImage}" alt="${outcomeTitle}">
             </div>
             <h2>${outcomeTitle}</h2>
