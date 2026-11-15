@@ -249,7 +249,7 @@ const eventsList = {
             {
                 text: "The radiation might affect and alter food supplies or ruin food crops. You can seal and put away all the ailments to protect them from radiation",
                 effects: { life: -15, food: +10, radiation: +5, energy: 0, discovery: 0 },
-                nextEvent: "marsquake_event"
+                nextEvent: "event6"
             }
         ]
     },
@@ -269,7 +269,7 @@ const eventsList = {
             {
                 text: "Reduce greenhouse heating and save energy",
                 effects: { life: 0, food: -15, radiation: 0, energy: +15, discovery: 0 },
-                nextEvent: "marsquake_event"
+                nextEvent: "solar_flare_warning"
             }
         ]
     },
@@ -284,12 +284,12 @@ const eventsList = {
             {
                 text: "Activate emergency magnetic shields (High Energy Drain).",
                 effects: { life: 0, food: 0, radiation: +15, energy: -35, discovery: 0 },
-                nextEvent: "marsquake_event"
+                nextEvent: "dust_storm_approach"
             },
             {
                 text: "Reroute power to life support life-cells and hunker down.",
                 effects: { life: +10, food: 0, radiation: -20, energy: -15, discovery: 0 },
-                nextEvent: "marsquake_event"
+                nextEvent: "dust_storm_approach"
             }
         ]
     },
@@ -409,7 +409,7 @@ const eventsList = {
             {
                 text: "Try to fix it as best as you can but continue to collect and analyse samples from the crater.",
                 effects: { life: 0, food: 0, radiation: 0, energy: 0, discovery: 0 },
-                nextEvent: "marsquake_event"
+                nextEvent: "analyze_samples"
             }
         ]
     },
