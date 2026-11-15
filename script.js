@@ -60,7 +60,27 @@
                     }
                 ]
             },
-        
+            "event3": {
+                tag: "Weather event",
+                image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2002/december/northmars_mgs_big.jpg?w=2000&h=1500&fit=crop&crop=faces%2Cfocalpoint",
+                alt: "Spring Dust Storms at the North Pole of Mars",
+                heading: "Dust storm",
+                description: "A storm is approaching the space base, causing a lack of sunlight for crops, and the suspended particles absorb heat in the upper layers of the atmosphere and prevent the heat from reaching the ground, causing the surface to cool down during the day.
+",
+                choices: [
+                    {
+                        text: "Use extra power from the ship to run the emergency lights and save the plants, but people will be cold",
+                        effects: { life: -10, food: +0, radiation: +0, energy: -10 },
+                        nextEvent: "dust_storm_approach"
+                    },
+                    {
+                        text: "Use extra energy to keep people warm, but some plants are going to die",
+                        effects: { energy: -20, life: +5, radiation: +0, food: -10},
+                        nextEvent: "event4"
+                    }
+                ]
+            },
+
 
             "solar_flare_warning": {
                 tag: "Space Weather Alert",
