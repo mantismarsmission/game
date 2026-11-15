@@ -1,10 +1,13 @@
+// Clear any leftover minigame results from previous sessions
+localStorage.removeItem("mars_tunnel_descent_results");
+
 // Game State Variables
 let gameState = {
     life: 100,
     food: 100,
     radiation: 100,
     energy: 100,
-    discovery:0,
+    discovery: 0,
     sol: 1,
     currentEventId: "welcome",
     randomEventsRemaining: 2,
@@ -431,7 +434,7 @@ const eventsList = {
         ]
     },
 
-"analyze_samples": {
+    "analyze_samples": {
         tag: "Analysing samples",
         image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/july/TurtleRock_Curiosity_2048.jpg?w=2000&h=1204&fit=crop&crop=faces%2Cfocalpoint",
         alt: "Biosignatures in Jezero Crater",
@@ -496,7 +499,8 @@ const eventsList = {
         isEnd: true,
         success: true
     },
-        "mission_complete": {
+
+    "mission_complete": {
         tag: "Mission Outcome",
         image: "images/missioncomplete.png",
         alt: "Astronaut drawing showing that the mission was just barely completed",
@@ -623,4 +627,87 @@ function updateGame() {
             <span class="arrow">→</span>
         </button>
     `).join("");
+}
+
+// Handle button selections
+function makeChoice(choiceIndex) {
+    const previousId = gameState.currentEventId;
+    const current = eventsList[previousId];
+    const chosenAction = current.choices[choiceIndex];
+
+    // Apply stats changes
+    gameState.life = Math.max(0, Math.min(100, gameState.life + chosenAction.effects.life));
+    gameState.food = Math.max(0, Math.min(100, gameState.food + chosenAction.effects.food));
+    gameState.radiation = Math.max(0, Math.min(100, gameState.radiation + chosenAction.effects.radiation));
+    gameState.energy = Math.max(0, Math.min(100, gameState.energy + chosenAction.effects.energy));
+
+    // Determine next event node
+    if (previousId === "welcome") {
+        // Sol 1: Pick 1st random event
+        gameState.randomEventsRemaining--;
+        gameState.currentEventId = pickRandomEvent();
+    } else if (gameState.inRandomPhase && gameState.randomEventsRemaining > 0 && previousId !== "sol_transition") {
+        // Finished Random Event #1 -> End of Sol 1 screen
+        gameState.currentEventId = "sol_transition";
+    } else if (previousId === "sol_transition") {
+        // Start Sol 2 -> Pick 2nd (non-repeating) random event
+        gameState.sol++;
+        gameState.randomEventsRemaining--;
+        gameState.currentEventId = pickRandomEvent();
+    } else if (gameState.inRandomPhase && gameState.randomEventsRemaining === 0) {
+        // Finished Random Event #2 -> End of Sol 2 screen
+        gameState.inRandomPhase = false;
+        gameState.currentEventId = "sol_transition_2";
+    } else if (previousId === "sol_transition_2") {
+        // Start Sol 3 -> Choice between Main Mission or Sidequest
+        gameState.sol++;
+        gameState.currentEventId = "mission_choice";
+    } else if (previousId === "mission_choice" || previousId === "sidequest_menu") {
+        // Same Sol while selecting a sidequest or launching the main mission
+        gameState.currentEventId = chosenAction.nextEvent;
+    } else {
+        // Advance to next Sol for sidequest completion and main mission events
+        gameState.sol++;
+        gameState.currentEventId = chosenAction.nextEvent;
+    }
+
+    // Special helper check for dynamic failure route
+    if (gameState.currentEventId === "check_failure") {
+        renderEndScreen(false);
+        return;
+    }
+
+    updateGame();
+}
+
+// Render end screens (Success or Failure)
+function renderEndScreen(isSuccess) {
+    const container = document.querySelector(".game-container");
+    const outcomeClass = isSuccess ? "success" : "failure";
+    const outcomeTitle = isSuccess ? "Mission Accomplished!" : "Mission Failure";
+    const outcomeText = isSuccess
+        ? `You survived ${gameState.sol} Sols on Mars and kept your crew alive. Earth sends its commendations.`
+        : `The harsh elements of the red planet proved overwhelming on Sol ${gameState.sol}. Life support systems failed, ending the mission prematurely.`;
+
+    container.innerHTML = `
+        <div class="game-over-screen ${outcomeClass}">
+            <div class="visual-area" style="height: 350px; margin-bottom: 20px; border-radius: 8px;">
+                <img src="${isSuccess ? 'images/missionaccomplished.png' : 'images/missionfailed.png'}" alt="Mission final status view">
+            </div>
+            <h2>${outcomeTitle}</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px; line-height: 1.6;">${outcomeText}</p>
+            <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 20px;">
+                <span style="font-size: 0.9rem;">Life Support: <strong>${gameState.life}%</strong></span>
+                <span style="font-size: 0.9rem;">Food: <strong>${gameState.food}%</strong></span>
+                <span style="font-size: 0.9rem;">Radiation Shield: <strong>${gameState.radiation}%</strong></span>
+                <span style="font-size: 0.9rem;">Energy: <strong>${gameState.energy}%</strong></span>
+            </div>
+            <button class="restart-btn" onclick="restartGame()">Restart Mission</button>
+        </div>
+    `;
+}
+
+// Reset game back to initial state
+function restartGame() {
+    location.reload();
 }
