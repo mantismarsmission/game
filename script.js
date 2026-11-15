@@ -110,7 +110,7 @@ const eventsList = {
             {
                 text: "Use extra energy to keep people warm, but some plants are going to die",
                 effects: { energy: -20, life: +5, radiation: +0, food: -10 },
-                nextEvent: "event5"
+                nextEvent: "event4"
             }
         ]
     },
@@ -129,7 +129,7 @@ const eventsList = {
             {
                 text: "Fix the radiation shield.",
                 effects: { life: 0, food: 0, radiation: +15, energy: -15 },
-                nextEvent: "event5"
+                nextEvent: "event6"
             }
         ]
     },
