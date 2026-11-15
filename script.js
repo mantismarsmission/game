@@ -472,21 +472,16 @@ const eventsList = {
 
     "marsquake_event": {
         tag: "Geological Event",
-        image: "image2.png",
-        alt: "Cracked Martian ground trembling near structural struts",
-        heading: "Seismic Activity Detected",
-        description: "A magnitude 5.2 marsquake rattles the bedrock beneath your habitation module. Warning alarms chime as a subterranean pressure release threatens the primary oxygen tanks.",
+        image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2022/august/SiccarPoint_CuriosityGill_7640.jpg?w=2000&h=977&fit=crop&crop=faces%2Cfocalpoint",
+        alt: "Marsquake Magnitude 5.1",
+        heading: "Marsquake resonating throughout Mars",
+        description: "A marsquake of magnitude 5.1 has shaken all throughout Mars, inflicting damages to all the systems. Unfortunately everything is damaged.",
         choices: [
             {
-                text: "Manually recalibrate the sub-surface pressure release valves.",
-                effects: { life: +15, food: 0, radiation: -5, energy: -15, discovery: 0 },
+                text: "Continue",
+                effects: { life: -5, food: -5, radiation: -5, energy: -5, discovery: 0 },
                 nextEvent: "mission_success"
             },
-            {
-                text: "Rely on automated fail-safes and secure internal loose equipment.",
-                effects: { life: -20, food: 0, radiation: 0, energy: -10, discovery: 0 },
-                nextEvent: "check_failure"
-            }
         ]
     },
 
