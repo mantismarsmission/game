@@ -4,6 +4,7 @@ let gameState = {
     food: 100,
     radiation: 100,
     energy: 100,
+    discovery:0,
     sol: 1,
     currentEventId: "welcome",
     randomEventsRemaining: 2,
