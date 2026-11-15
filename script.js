@@ -57,7 +57,7 @@ const eventsList = {
 
     "sol_transition_2": {
         tag: "End of Sol Log",
-        image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/july/PIA00621.jpg?w=1280&h=612&fit=crop&crop=faces%2Cfocalpoint",
+        image: "https://ciencia.nasa.gov/wp-content/uploads/sites/2/2023/12/rocky-dusty-red-plain-in-fading-light.-a-bit-of-the-viking-lander-is-in-the-foreground.webp",
         alt: "Martian horizon at dusk",
         heading: "Sol 2 Complete",
         description: "Another grueling Martian day comes to a close. With initial outpost hazards stabilized, Mission Control clears your crew to choose tomorrow's operational priority.",
