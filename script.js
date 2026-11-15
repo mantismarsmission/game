@@ -56,7 +56,7 @@
                     {
                         text: "Leave the greenhouse and take shelter",
                         effects: { life: +5, food: -15, radiation: +0, energy: +0 },
-                        nextEvent: "event3"
+                        nextEvent: "event6"
                     }
                 ]
             },
