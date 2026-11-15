@@ -253,7 +253,121 @@ const eventsList = {
             }
         ]
     },
+    "sidequest1": {
+        tag: "Side quest",
+        image: "https://assets.science.nasa.gov/dynamicimage/assets/science/psd/solar/2023/09/p/i/a/0/PIA01551-1.jpg?w=1099&h=572&fit=clip&crop=faces%2Cfocalpoint",
+        alt: "Image of the Sojourner rover",
+        heading: "Repair the Sojourner rover",
+        description: "In 1997, the Sojourner rover was sent to Mars by NASA. Now, it is broken due to irreversible damage caused by the Martian climate, having initially become inactive following a communication failure. You will repair it.",
+        choices: [
+            {
+                text: "Return to the main mission",
+                effects: { life: +15, food: -5, radiation: 0, energy: -5 },
+                nextEvent: "main_mission"
+            }
+        ]
+    },
 
+    "sidequest2": {
+        tag: "Sidequest",
+        image: "https://assets.science.nasa.gov/content/dam/science/psd/mars/resources/detail_files/6/6197_mars-human-exploration-art-astronauts-outpost-habitat-full2.jpg",
+        alt: "Image of a Mars Outpost simulation",
+        heading: "Collect outpost solar panels from a previous mission",
+        description: "You and your team went to collect the outpost solar panels from a previous mission and also found food rations",
+        choices: [
+            {
+                text: "Return to the main mission",
+                effects: { life: +5, food: +15, radiation: 0, energy: +20 },
+                nextEvent: "main_mission"
+            }
+        ]
+    },
+
+    "sidequest3": {
+        tag: "Side quest",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9N56nnnppiXR7_zKyYXcetZPzfNVPiW7PI5xpSLtoFedR8pg_oURhEoQ&s=10",
+        alt: "a supply rocket destroyed on Mars",
+        heading: "Obtain the supplies",
+        description: "You went to a place containing supplies brought by NASA, because you were told over the radio that they had sent rations.",
+        choices: [
+            {
+                text: "When you arrived at the location where the supplies were, you saw that they had been destroyed by the impact and nothing had survived",
+                effects: { life: 0, food: -10, radiation: 0, energy: -10 },
+                nextEvent: "main_mission"
+            }
+        ]
+    },
+    "main_mission": {
+        tag: "MISSION",
+        image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2022/june/MarsFingers_Curiosity_1338.jpg?w=1338&h=1193&fit=crop&crop=faces%2Cfocalpoint",
+        alt: "Life on Mars, could there be life in the underground of the red planet?",
+        heading: "Mission for Life on Mars",
+        description: "A sample collected by NASA’s Perseverance Mars rover from an ancient dry riverbed in Jezero Crater could preserve evidence of ancient microbial life. Taken from a rock named ‘Cheyava Falls’, the sample, called ‘Sapphire Canyon’ contains potential biosignatures. The astronauts head down to check if more evidence of life resides in the underground of Mars.",
+        choices: [
+            {
+                text: "Continue.",
+                effects: { life: 0, food: 0, radiation: 0, energy: 0 },
+                nextEvent: "marsquake_event"
+            }
+        ]
+    },
+    "crater_exploration": {
+        tag: "Jezero Crater exploration",
+        image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2022/june/MarsFingers_Curiosity_1338.jpg?w=1338&h=1193&fit=crop&crop=faces%2Cfocalpoint",
+        alt: "The Perseverance Rover has stopped working",
+        heading: "Jezero Exploration",
+        description: "The Perseverance Rover has been damaged from hazardous terrain.",
+        choices: [
+            {
+                text: "Go back to the base to fix the damaged Rover, and investigate the few samples that it has collected.",
+                effects: { life: 0, food: 0, radiation: 0, energy: 0 },
+                nextEvent: "back_at_the_base"
+            },
+            {
+                text: "Try to fix it as best as you can but continue to collect and analyse samples from the crater.",
+                effects: { life: 0, food: 0, radiation: 0, energy: 0 },
+                nextEvent: "marsquake_event"
+            }
+        ]
+    },
+    "back_at_the_base": {
+        tag: "Going back to the base",
+        image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2020/january/HillsRidgesTracks_Curiosity_2725.jpg?w=2000&h=1245&fit=crop&crop=faces%2Cfocalpoint",
+        alt: "We are back at the base",
+        heading: "What’s next?",
+        description: "You are back to the base. The Rover is heavily damaged, the wheels and suspension are damaged. The samples collected by the Rover are ready to be examined.",
+        choices: [
+            {
+                text: "Repair the Rover.",
+                effects: { life: -5, food: 0, radiation: 0, energy: -5 },
+                nextEvent: "marsquake_event"
+            },
+            {
+                text: "Examine the samples collected by the Rover.",
+                effects: { life: 0, food: 0, radiation: 0, energy: -5 },
+                nextEvent: "analyze_samples"
+            }
+        ]
+    },
+    "analyze_samples": {
+        tag: "Analysing samples",
+        image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/july/TurtleRock_Curiosity_2048.jpg?w=2000&h=1204&fit=crop&crop=faces%2Cfocalpoint",
+        alt: "Biosignatures in Jezero Crater",
+        heading: "Traces of ancient microbes",
+        description: "As you analyse the samples, there seems to be traces of ancient microbes, what do you do?",
+        choices: [
+            {
+                text: "Report the discovery and stop investigating further.",
+                effects: { life: 0, food: 0, radiation: 0, energy: -5 },
+                nextEvent: "marsquake_event"
+            },
+            {
+                text: "Continue to search through the Jezero Crater, and collect more samples regarding the traces you have found.",
+                effects: { life: 0, food: 0, radiation: 0, energy: 0 },
+                nextEvent: "marsquake_event"
+            }
+        ]
+    },
     "marsquake_event": {
         tag: "Geological Event",
         image: "image2.png",
@@ -273,7 +387,6 @@ const eventsList = {
             }
         ]
     },
-
     "mission_success": {
         tag: "Mission Outcome",
         image: "image1.png",
