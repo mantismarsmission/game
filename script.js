@@ -123,7 +123,7 @@ const eventsList = {
         tag: "End of Sol Log",
         image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/july/PIA00621.jpg?w=1280&h=612&fit=crop&crop=faces%2Cfocalpoint",
         alt: "Martian horizon at dusk",
-        heading: "Sidequest Complete — Sol Ended",
+        heading: "Sidequest Complete",
         description: "The team returns to the habitat as night falls over Elysium Planitia. Tomorrow, all crew members will focus on the main mission.",
         choices: [
             {
@@ -712,7 +712,7 @@ function renderEndScreen(outcome) {
 
     container.innerHTML = `
         <div class="game-over-screen ${outcomeClass}">
-            <div class="visual-area" style="height: 350px; margin-bottom: 20px; border-radius: 8px;">
+            <div class="visual-area" style="height: 400px; margin-bottom: 20px; border-radius: 8px;">
                 <img src="${outcomeImage}" alt="${outcomeTitle}">
             </div>
             <h2>${outcomeTitle}</h2>
