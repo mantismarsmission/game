@@ -472,8 +472,17 @@ const eventsList = {
 
     "mission_success": {
         tag: "Mission Outcome",
-        image: "image1.png",
-        alt: "Outpost glowing successfully against a bright Martian sunset",
+        image: "missionaccomplished.png",
+        alt: "Astronaut drawing showing that the mission was accomplished",
+        heading: "Outpost Stabilized: Success!",
+        description: "Through calculated risks and stellar resource management, you have weathered the planet's harshest extremes. The colony beacons transmit a secure status back to mission control on Earth.",
+        isEnd: true,
+        success: true
+    },
+        "mission_complete": {
+        tag: "Mission Outcome",
+        image: "missioncomplete.png",
+        alt: "Astronaut drawing showing that the mission was just barely completed",
         heading: "Outpost Stabilized: Success!",
         description: "Through calculated risks and stellar resource management, you have weathered the planet's harshest extremes. The colony beacons transmit a secure status back to mission control on Earth.",
         isEnd: true,
@@ -482,8 +491,8 @@ const eventsList = {
 
     "mission_failure": {
         tag: "Critical Failure",
-        image: "image2.png",
-        alt: "Darkened emergency outpost panels flashing red warning lights",
+        image: "missionfailed.png",
+        alt: "Astronaut drawing showing that the mission failed",
         heading: "Catastrophic System Failure",
         description: "Critical thresholds have been breached. Whether due to radiation poisoning, oxygen failure, or total power collapse, the Ares-IV outpost has gone dark.",
         isEnd: true,
