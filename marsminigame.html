@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life on Mars: Subsurface Descent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Martian Atmosphere & Game Styling */
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #090605;
+            color: #f8fafc;
+            font-family: 'Rajdhani', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* Main Game Frame */
+        #game-shell {
+            position: relative;
+            width: 100%;
+            max-width: 680px;
+            height: 100%;
+            max-height: 920px;
+            background: radial-gradient(circle at 50% 0%, #2b130a 0%, #120805 60%, #070302 100%);
+            border: 1px solid rgba(234, 88, 12, 0.35);
+            box-shadow: 0 0 60px rgba(220, 38, 38, 0.18), inset 0 0 40px rgba(0, 0, 0, 0.85);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 681px) {
+            #game-shell {
+                height: 94vh;
+                border-radius: 20px;
+            }
+        }
+
+        /* Canvas fills the shell */
+        #tunnel-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+
+        /* Sci-fi Glassmorphism HUD Panels */
+        .hud-glass {
+            background: rgba(18, 10, 8, 0.78);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Tactical Action Buttons */
+        .btn-mars {
+            background: linear-gradient(135deg, #ea580c 0%, #c2410c 50%, #9a3412 100%);
+            border: 1px solid #fb923c;
+            box-shadow: 0 4px 20px rgba(234, 88, 12, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+            transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .btn-mars:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 26px rgba(249, 115, 22, 0.65), inset 0 1px 2px rgba(255, 255, 255, 0.5);
+            filter: brightness(1.08);
+        }
+
+        .btn-mars:active:not(:disabled) {
+            transform: translateY(1px);
+        }
+
+        .btn-mars:disabled {
+            background: linear-gradient(135deg, #292524 0%, #1c1917 100%);
+            border-color: rgba(168, 162, 158, 0.25);
+            box-shadow: none;
+            color: #78716c;
+            cursor: not-allowed;
+        }
+
+        /* Subtle Scanline Overlay */
+        .scanlines {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0),
+                rgba(255, 255, 255, 0) 50%,
+                rgba(0, 0, 0, 0.14) 50%,
+                rgba(0, 0, 0, 0.14)
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        /* Touch Controls */
+        .touch-btn {
+            background: rgba(24, 14, 10, 0.72);
+            border: 1px solid rgba(251, 146, 60, 0.35);
+            backdrop-filter: blur(6px);
+            transition: transform 0.08s ease, background-color 0.08s ease;
+        }
+
+        .touch-btn:active, .touch-btn.pressed {
+            background: rgba(234, 88, 12, 0.45);
+            border-color: #fb923c;
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-shell">
+        <!-- CRT Scanlines Effect -->
+        <div class="scanlines"></div>
+
+        <!-- Top Telemetry HUD Bar -->
+        <header id="hud-header" class="absolute top-0 left-0 right-0 z-20 p-3 sm:p-4 flex items-center justify-between gap-2 pointer-events-none">
+            <!-- Depth Gauge -->
+            <div class="hud-glass rounded-xl px-3.5 py-2 flex items-center gap-2.5">
+                <div class="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse"></div>
+                <div>
+                    <div class="text-[10px] uppercase tracking-widest text-orange-300/80 font-bold">Depth Limit</div>
+                    <div id="hud-depth" class="font-orbitron text-base sm:text-lg font-bold text-white leading-tight">0 / 400 m</div>
+                </div>
+            </div>
+
+            <!-- Audio Mute Toggle -->
+            <button id="btn-audio" type="button" aria-label="Toggle Sound" class="hud-glass pointer-events-auto rounded-xl p-2.5 text-orange-300 hover:text-white hover:border-orange-400 transition">
+                <svg id="icon-sound-on" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14"/>
+                </svg>
+                <svg id="icon-sound-off" class="w-5 h-5 hidden text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H2v6h4l5 4V5zM23 9l-6 6M17 9l6 6"/>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Main Interactive Game Canvas -->
+        <canvas id="tunnel-canvas"></canvas>
+
+        <!-- Start / Mission Completed Overlay -->
+        <div id="overlay-screen" class="absolute inset-0 z-30 flex items-center justify-center p-4 sm:p-6 bg-black/75 backdrop-blur-sm transition-opacity duration-300">
+            <!-- Start Screen Card -->
+            <div id="card-start" class="hud-glass rounded-2xl p-6 sm:p-8 max-w-md w-full text-center border-orange-500/40">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/15 border border-orange-500/30 text-orange-300 text-xs font-bold uppercase tracking-widest mb-4">
+                    <span>Life on Mars // Recon Drone</span>
+                </div>
+                <h1 class="font-orbitron text-2xl sm:text-3xl font-black text-white tracking-wide mb-2">
+                    SUBSURFACE DESCENT
+                </h1>
+                <p class="text-stone-300 text-sm sm:text-base leading-relaxed mb-6">
+                    Pilot the <span class="text-orange-400 font-semibold">Valles Marineris Scout Drone</span> down the lava tube to a maximum depth of <span class="text-orange-300 font-semibold">400 meters</span>. Gather ancient microbe samples and set down safely on basalt formations or the cavern floor.
+                </p>
+
+                <!-- Controls Guide -->
+                <div class="grid grid-cols-2 gap-3 mb-6 text-left">
+                    <div class="bg-black/40 border border-stone-700/60 rounded-xl p-3">
+                        <div class="text-xs uppercase tracking-wider text-orange-400 font-bold mb-1">Steer Drone</div>
+                        <div class="text-xs text-stone-300 flex items-center gap-1.5">
+                            <kbd class="px-2 py-0.5 bg-stone-800 border border-stone-600 rounded text-white font-mono">◀</kbd>
+                            <kbd class="px-2 py-0.5 bg-stone-800 border border-stone-600 rounded text-white font-mono">▶</kbd>
+                            <span>or Touch</span>
+                        </div>
+                    </div>
+                    <div class="bg-black/40 border border-stone-700/60 rounded-xl p-3">
+                        <div class="text-xs uppercase tracking-wider text-emerald-400 font-bold mb-1">Bio-Samples</div>
+                        <div class="text-xs text-stone-300">
+                            Collect glowing microbes during your descent.
+                        </div>
+                    </div>
+                </div>
+
+                <button id="btn-start" type="button" class="btn-mars w-full py-3.5 px-6 rounded-xl font-orbitron font-bold text-white tracking-wider text-base uppercase">
+                    Launch Descent
+                </button>
+            </div>
+
+            <!-- Post-Landing Card (No scores or results displayed) -->
+            <div id="card-complete" class="hidden hud-glass rounded-2xl p-6 sm:p-8 max-w-md w-full text-center border-orange-500/40">
+                <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center">
+                    <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                    </svg>
+                </div>
+                <div class="text-xs uppercase tracking-widest text-emerald-400 font-bold mb-1">Telemetry Archived</div>
+                <h2 class="font-orbitron text-2xl sm:text-3xl font-black text-white mb-3">DRONE LANDED</h2>
+                <p class="text-stone-300 text-sm sm:text-base leading-relaxed mb-6">
+                    The reconnaissance drone has safely touched down and transmitted its subsurface expedition data to Mars Base Command. This descent mission can only be flown once per session.
+                </p>
+                <div class="w-full py-3 px-4 rounded-xl bg-stone-900/90 border border-stone-700/80 font-orbitron text-xs tracking-widest uppercase text-stone-400">
+                    Mission Status: Complete
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Touch Controls for Mobile / Tablet -->
+        <div id="touch-controls" class="absolute bottom-4 left-4 right-4 z-20 flex justify-between gap-4 sm:hidden pointer-events-none">
+            <button id="touch-left" type="button" aria-label="Steer Left" class="touch-btn pointer-events-auto flex-1 py-4 rounded-2xl flex items-center justify-center text-orange-300">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <button id="touch-right" type="button" aria-label="Steer Right" class="touch-btn pointer-events-auto flex-1 py-4 rounded-2xl flex items-center justify-center text-orange-300">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * LIFE ON MARS: SUBSURFACE DESCENT
+         * - 400-meter maximum tunnel depth limit.
+         * - Drone safely lands on rock obstacles or the 400m cavern floor.
+         * - Playable once per page load (resets automatically on page refresh).
+         * - Silently stores Discovery Points in `window.marsDescentResults`,
+         *   `localStorage['mars_tunnel_descent_results']`, and the `marsMiniGameOver`
+         *   custom event without displaying results to the player.
+         */
+        (function () {
+            'use strict';
+
+            // =========================================================================
+            // 1. WEB AUDIO SYNTHESIZER (Procedural Sound Effects - No External Files)
+            // =========================================================================
+            class MarsAudioEngine {
+                constructor() {
+                    this.ctx = null;
+                    this.muted = false;
+                    this.rotorOsc = null;
+                    this.rotorGain = null;
+                }
+
+                init() {
+                    if (!this.ctx) {
+                        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                        if (AudioCtx) {
+                            this.ctx = new AudioCtx();
+                        }
+                    }
+                    if (this.ctx && this.ctx.state === 'suspended') {
+                        this.ctx.resume();
+                    }
+                }
+
+                toggleMute() {
+                    this.muted = !this.muted;
+                    if (this.rotorGain && this.ctx) {
+                        this.rotorGain.gain.setTargetAtTime(this.muted ? 0 : 0.045, this.ctx.currentTime, 0.05);
+                    }
+                    return this.muted;
+                }
+
+                startRotorHum() {
+                    if (!this.ctx || this.muted) return;
+                    this.stopRotorHum();
+
+                    try {
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        const filter = this.ctx.createBiquadFilter();
+
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(58, this.ctx.currentTime);
+
+                        filter.type = 'lowpass';
+                        filter.frequency.setValueAtTime(165, this.ctx.currentTime);
+
+                        gain.gain.setValueAtTime(0.001, this.ctx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.045, this.ctx.currentTime + 0.4);
+
+                        osc.connect(filter);
+                        filter.connect(gain);
+                        gain.connect(this.ctx.destination);
+
+                        osc.start();
+                        this.rotorOsc = osc;
+                        this.rotorGain = gain;
+                    } catch (e) {
+                        // Ignore audio autoplay block if any
+                    }
+                }
+
+                updateRotorPitch(speedFactor) {
+                    if (!this.ctx || !this.rotorOsc || this.muted) return;
+                    const targetFreq = 56 + speedFactor * 24;
+                    this.rotorOsc.frequency.setTargetAtTime(targetFreq, this.ctx.currentTime, 0.1);
+                }
+
+                stopRotorHum() {
+                    if (this.rotorOsc) {
+                        try {
+                            this.rotorOsc.stop();
+                            this.rotorOsc.disconnect();
+                        } catch (e) {}
+                        this.rotorOsc = null;
+                        this.rotorGain = null;
+                    }
+                }
+
+                playCollectMicrobe() {
+                    if (!this.ctx || this.muted) return;
+                    const now = this.ctx.currentTime;
+                    const notes = [587.33, 880, 1174.66]; // D5, A5, D6 chime
+
+                    notes.forEach((freq, idx) => {
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(freq, now + idx * 0.055);
+
+                        gain.gain.setValueAtTime(0.001, now + idx * 0.055);
+                        gain.gain.exponentialRampToValueAtTime(0.11, now + idx * 0.055 + 0.02);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.055 + 0.25);
+
+                        osc.connect(gain);
+                        gain.connect(this.ctx.destination);
+                        osc.start(now + idx * 0.055);
+                        osc.stop(now + idx * 0.055 + 0.26);
+                    });
+                }
+
+                playTouchdown() {
+                    if (!this.ctx || this.muted) return;
+                    const now = this.ctx.currentTime;
+
+                    // Soft landing suspension thud + telemetry confirmation chime
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(140, now);
+                    osc.frequency.exponentialRampToValueAtTime(48, now + 0.28);
+
+                    gain.gain.setValueAtTime(0.16, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.34);
+
+                    // Telemetry confirmation tone
+                    const tone = this.ctx.createOscillator();
+                    const toneGain = this.ctx.createGain();
+                    tone.type = 'sine';
+                    tone.frequency.setValueAtTime(523.25, now + 0.12);
+                    tone.frequency.setValueAtTime(659.25, now + 0.24);
+
+                    toneGain.gain.setValueAtTime(0.001, now + 0.12);
+                    toneGain.gain.exponentialRampToValueAtTime(0.08, now + 0.15);
+                    toneGain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+
+                    tone.connect(toneGain);
+                    toneGain.connect(this.ctx.destination);
+                    tone.start(now + 0.12);
+                    tone.stop(now + 0.46);
+                }
+            }
+
+            // =========================================================================
+            // 2. GAME CONFIGURATION & STATE
+            // =========================================================================
+            const canvas = document.getElementById('tunnel-canvas');
+            const ctx = canvas.getContext('2d');
+
+            const hudDepth = document.getElementById('hud-depth');
+            const overlayScreen = document.getElementById('overlay-screen');
+            const cardStart = document.getElementById('card-start');
+            const cardComplete = document.getElementById('card-complete');
+            const btnStart = document.getElementById('btn-start');
+            const btnAudio = document.getElementById('btn-audio');
+            const iconSoundOn = document.getElementById('icon-sound-on');
+            const iconSoundOff = document.getElementById('icon-sound-off');
+
+            const audio = new MarsAudioEngine();
+
+            // Mission Rules & Storage Keys
+            const MAX_DEPTH_METERS = 400;
+            const STORAGE_KEY_RESULTS = 'mars_tunnel_descent_results';
+
+            const STATE = {
+                MENU: 'MENU',
+                PLAYING: 'PLAYING',
+                LANDING: 'LANDING',
+                COMPLETE: 'COMPLETE'
+            };
+
+            let gameState = STATE.MENU;
+            let hasPlayedMission = false; // Resets automatically when the page refreshes
+            let width = 0;
+            let height = 0;
+            let dpr = 1;
+            let lastTime = 0;
+
+            // Player Drone State
+            const drone = {
+                x: 0,
+                y: 0,
+                vx: 0,
+                radius: 18,
+                tilt: 0,
+                rotorAngle: 0,
+                rotorSpeed: 28,
+                invulnTimer: 0
+            };
+
+            // Input State
+            const keys = {
+                left: false,
+                right: false
+            };
+
+            // Progression & Silently Stored Metrics
+            let depthMeters = 0;
+            let discoveryPoints = 0;
+            let samplesCollected = 0;
+            let baseDescentSpeed = 230;
+            let currentDescentSpeed = 230;
+            let nextMilestone = 100;
+            let landingTimer = 0;
+            let landingOutcome = 'obstacle'; // 'obstacle' or 'floor'
+            let cavernFloorY = null;
+
+            // World Entities
+            let wallSegments = [];
+            let obstacles = [];
+            let microbes = [];
+            let particles = [];
+            let dustMotes = [];
+            let distanceSinceLastObstacle = 0;
+            let distanceSinceLastMicrobe = 0;
+            let tunnelSeedPhase = 0;
+
+            // =========================================================================
+            // 3. SILENT RESULT STORAGE
+            // =========================================================================
+            function saveSilentMissionResults(finalPoints, finalDepth, finalSamples, outcome) {
+                const payload = {
+                    discoveryPoints: Math.floor(finalPoints),
+                    depth: Math.floor(finalDepth),
+                    maxDepth: MAX_DEPTH_METERS,
+                    samplesCollected: finalSamples,
+                    outcome: outcome,
+                    timestamp: new Date().toISOString()
+                };
+
+                // Expose in memory on window for parent game scripts
+                window.marsDescentResults = payload;
+
+                // Persist silently in localStorage for parent game retrieval
+                try {
+                    localStorage.setItem(STORAGE_KEY_RESULTS, JSON.stringify(payload));
+                } catch (e) {}
+
+                // Notify parent Life on Mars window via custom event
+                try {
+                    window.dispatchEvent(new CustomEvent('marsMiniGameOver', {
+                        detail: payload
+                    }));
+                } catch (e) {}
+            }
+
+            // =========================================================================
+            // 4. RESPONSIVE CANVAS RESIZING
+            // =========================================================================
+            function resizeCanvas() {
+                const rect = canvas.parentElement.getBoundingClientRect();
+                dpr = Math.min(window.devicePixelRatio || 1, 2);
+                width = rect.width;
+                height = rect.height;
+
+                canvas.width = Math.floor(width * dpr);
+                canvas.height = Math.floor(height * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+                if (gameState === STATE.MENU) {
+                    drone.x = width * 0.5;
+                    drone.y = height * 0.25;
+                    generateInitialTunnel();
+                } else {
+                    drone.x = Math.max(40, Math.min(width - 40, drone.x));
+                }
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+
+            // =========================================================================
+            // 5. PROCEDURAL TUNNEL, OBSTACLES & MICROBE GENERATION
+            // =========================================================================
+            const SEGMENT_HEIGHT = 36;
+
+            function computeWallBoundsAt(phase, currentDepth) {
+                const difficulty = Math.min(1, currentDepth / MAX_DEPTH_METERS);
+                const minCorridor = Math.max(150, width * (0.58 - difficulty * 0.16));
+                const maxCorridor = Math.max(minCorridor + 60, width * (0.76 - difficulty * 0.12));
+
+                const wander = Math.sin(phase * 0.45) * (width * 0.14) + Math.cos(phase * 0.19) * (width * 0.08);
+                const corridorWidth = minCorridor + (Math.sin(phase * 0.31) * 0.5 + 0.5) * (maxCorridor - minCorridor);
+
+                let center = width * 0.5 + wander;
+                const margin = 26;
+                const halfW = corridorWidth * 0.5;
+
+                if (center - halfW < margin) center = margin + halfW;
+                if (center + halfW > width - margin) center = width - margin - halfW;
+
+                const leftJag = (Math.sin(phase * 2.3) * 0.5 + 0.5) * 14;
+                const rightJag = (Math.cos(phase * 2.7) * 0.5 + 0.5) * 14;
+
+                return {
+                    left: center - halfW + leftJag,
+                    right: center + halfW - rightJag,
+                    center: center
+                };
+            }
+
+            function generateInitialTunnel() {
+                wallSegments = [];
+                tunnelSeedPhase = 0;
+                const count = Math.ceil(height / SEGMENT_HEIGHT) + 4;
+                for (let i = 0; i < count; i++) {
+                    const y = -SEGMENT_HEIGHT + i * SEGMENT_HEIGHT;
+                    const bounds = computeWallBoundsAt(tunnelSeedPhase, 0);
+                    wallSegments.push({
+                        y: y,
+                        left: bounds.left,
+                        right: bounds.right,
+                        strataColor: i % 3 === 0 ? '#5c2314' : '#45180d'
+                    });
+                    tunnelSeedPhase += 0.28;
+                }
+            }
+
+            function initAmbientDust() {
+                dustMotes = [];
+                for (let i = 0; i < 38; i++) {
+                    dustMotes.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        r: 1 + Math.random() * 2.2,
+                        alpha: 0.15 + Math.random() * 0.35,
+                        speedFactor: 0.3 + Math.random() * 0.6
+                    });
+                }
+            }
+
+            function spawnRockObstacle(yPos, leftWall, rightWall) {
+                const corridorW = rightWall - leftWall;
+                if (corridorW < 120) return;
+
+                const difficulty = Math.min(1, depthMeters / MAX_DEPTH_METERS);
+                const typeRoll = Math.random();
+
+                if (typeRoll < 0.65) {
+                    const fromLeft = Math.random() < 0.5;
+                    const maxProtrusion = corridorW * (0.42 + difficulty * 0.14);
+                    const minProtrusion = corridorW * 0.24;
+                    const obsWidth = minProtrusion + Math.random() * (maxProtrusion - minProtrusion);
+                    const obsHeight = 32 + Math.random() * 22;
+
+                    const x = fromLeft ? leftWall - 10 : rightWall - obsWidth + 10;
+                    const vertices = buildJaggedRockPolygon(obsWidth, obsHeight, fromLeft ? 'left' : 'right');
+
+                    obstacles.push({
+                        x: x,
+                        y: yPos,
+                        w: obsWidth,
+                        h: obsHeight,
+                        vertices: vertices,
+                        type: 'ledge'
+                    });
+                } else {
+                    const obsWidth = Math.min(corridorW * 0.36, 56 + Math.random() * 34);
+                    const obsHeight = 36 + Math.random() * 20;
+                    const safePad = 42;
+                    const minX = leftWall + safePad;
+                    const maxX = rightWall - obsWidth - safePad;
+
+                    if (maxX > minX) {
+                        const x = minX + Math.random() * (maxX - minX);
+                        const vertices = buildJaggedRockPolygon(obsWidth, obsHeight, 'floating');
+                        obstacles.push({
+                            x: x,
+                            y: yPos,
+                            w: obsWidth,
+                            h: obsHeight,
+                            vertices: vertices,
+                            type: 'boulder'
+                        });
+                    }
+                }
+            }
+
+            function buildJaggedRockPolygon(w, h, mode) {
+                const pts = [];
+                if (mode === 'left') {
+                    pts.push({ x: 0, y: 0 });
+                    pts.push({ x: w * 0.65, y: h * 0.12 });
+                    pts.push({ x: w, y: h * 0.48 });
+                    pts.push({ x: w * 0.78, y: h * 0.85 });
+                    pts.push({ x: 0, y: h });
+                } else if (mode === 'right') {
+                    pts.push({ x: w, y: 0 });
+                    pts.push({ x: w * 0.35, y: h * 0.15 });
+                    pts.push({ x: 0, y: h * 0.52 });
+                    pts.push({ x: w * 0.25, y: h * 0.88 });
+                    pts.push({ x: w, y: h });
+                } else {
+                    pts.push({ x: w * 0.25, y: 0 });
+                    pts.push({ x: w * 0.78, y: h * 0.08 });
+                    pts.push({ x: w, y: h * 0.5 });
+                    pts.push({ x: w * 0.72, y: h * 0.94 });
+                    pts.push({ x: w * 0.22, y: h });
+                    pts.push({ x: 0, y: h * 0.48 });
+                }
+                return pts;
+            }
+
+            function spawnMicrobeNode(yPos, leftWall, rightWall) {
+                const pad = 34;
+                const minX = leftWall + pad;
+                const maxX = rightWall - pad;
+                if (maxX <= minX) return;
+
+                const x = minX + Math.random() * (maxX - minX);
+                microbes.push({
+                    x: x,
+                    y: yPos,
+                    radius: 12,
+                    pulsePhase: Math.random() * Math.PI * 2,
+                    collected: false
+                });
+            }
+
+            function spawnDustPuff(x, y, count) {
+                for (let i = 0; i < count; i++) {
+                    const angle = Math.PI + (Math.random() - 0.5) * Math.PI;
+                    const speed = 25 + Math.random() * 65;
+                    particles.push({
+                        x: x + (Math.random() - 0.5) * 18,
+                        y: y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed * 0.5 - 10,
+                        life: 1.0,
+                        decay: 1.1 + Math.random() * 0.7,
+                        size: 2.5 + Math.random() * 3.5,
+                        color: i % 2 === 0 ? '#d97706' : '#9a3412'
+                    });
+                }
+            }
+
+            function spawnSampleSparkles(x, y, count) {
+                for (let i = 0; i < count; i++) {
+                    const angle = (Math.PI * 2 * i) / count + Math.random() * 0.4;
+                    const speed = 45 + Math.random() * 95;
+                    particles.push({
+                        x: x,
+                        y: y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        life: 1.0,
+                        decay: 1.8 + Math.random() * 0.8,
+                        size: 2.2 + Math.random() * 2.5,
+                        color: i % 2 === 0 ? '#34d399' : '#6ee7b7'
+                    });
+                }
+            }
+
+            // =========================================================================
+            // 6. GAME FLOW & SAFE LANDING SEQUENCE
+            // =========================================================================
+            function startGame() {
+                if (hasPlayedMission) return;
+
+                audio.init();
+                audio.startRotorHum();
+
+                gameState = STATE.PLAYING;
+                depthMeters = 0;
+                discoveryPoints = 0;
+                samplesCollected = 0;
+                nextMilestone = 100;
+                currentDescentSpeed = baseDescentSpeed;
+                distanceSinceLastObstacle = 0;
+                distanceSinceLastMicrobe = 0;
+                landingTimer = 0;
+                landingOutcome = 'obstacle';
+                cavernFloorY = null;
+
+                obstacles = [];
+                microbes = [];
+                particles = [];
+
+                generateInitialTunnel();
+                initAmbientDust();
+
+                drone.x = width * 0.5;
+                drone.y = height * 0.24;
+                drone.vx = 0;
+                drone.tilt = 0;
+                drone.rotorSpeed = 32;
+                drone.invulnTimer = 0.8;
+
+                overlayScreen.classList.add('opacity-0', 'pointer-events-none');
+                updateHUD();
+            }
+
+            function initiateSafeLanding(outcome, targetY) {
+                if (gameState !== STATE.PLAYING) return;
+
+                gameState = STATE.LANDING;
+                landingOutcome = outcome;
+                landingTimer = 0;
+
+                if (typeof targetY === 'number') {
+                    drone.y = targetY;
+                }
+
+                // Stop horizontal drift and level landing skids
+                drone.vx = 0;
+                drone.tilt = 0;
+
+                // Kick up gentle Martian regolith dust under the skids
+                spawnDustPuff(drone.x, drone.y + drone.radius, 18);
+
+                audio.stopRotorHum();
+                audio.playTouchdown();
+
+                // Silently record final Discovery Points immediately upon touchdown
+                saveSilentMissionResults(discoveryPoints, depthMeters, samplesCollected, outcome);
+            }
+
+            function finalizeMissionLock() {
+                gameState = STATE.COMPLETE;
+                hasPlayedMission = true;
+
+                // Show neutral completion screen with zero scores displayed
+                cardStart.classList.add('hidden');
+                cardComplete.classList.remove('hidden');
+                overlayScreen.classList.remove('opacity-0', 'pointer-events-none');
+            }
+
+            function updateHUD() {
+                const clampedDepth = Math.min(MAX_DEPTH_METERS, Math.floor(depthMeters));
+                hudDepth.textContent = `${clampedDepth} / ${MAX_DEPTH_METERS} m`;
+            }
+
+            // =========================================================================
+            // 7. COLLISION DETECTION
+            // =========================================================================
+            function checkCollisions() {
+                if (drone.invulnTimer > 0) return;
+
+                const hitRadius = drone.radius * 0.78;
+
+                // 1. Check Tunnel Wall Contacts (Safe touchdown on canyon ledge)
+                for (let i = 0; i < wallSegments.length; i++) {
+                    const seg = wallSegments[i];
+                    if (drone.y + hitRadius >= seg.y && drone.y - hitRadius <= seg.y + SEGMENT_HEIGHT) {
+                        if (drone.x - hitRadius <= seg.left) {
+                            drone.x = seg.left + hitRadius + 2;
+                            initiateSafeLanding('obstacle');
+                            return;
+                        }
+                        if (drone.x + hitRadius >= seg.right) {
+                            drone.x = seg.right - hitRadius - 2;
+                            initiateSafeLanding('obstacle');
+                            return;
+                        }
+                    }
+                }
+
+                // 2. Check Rock Obstacles (Drone lands gently on top of the rock)
+                for (let i = 0; i < obstacles.length; i++) {
+                    const obs = obstacles[i];
+                    const padX = obs.w * 0.12;
+                    const padY = obs.h * 0.14;
+                    const rx = obs.x + padX;
+                    const ry = obs.y + padY;
+                    const rw = obs.w - padX * 2;
+                    const rh = obs.h - padY * 2;
+
+                    const closestX = Math.max(rx, Math.min(drone.x, rx + rw));
+                    const closestY = Math.max(ry, Math.min(drone.y, ry + rh));
+
+                    const dx = drone.x - closestX;
+                    const dy = drone.y - closestY;
+
+                    if (dx * dx + dy * dy < hitRadius * hitRadius) {
+                        // Seat drone skids neatly onto the upper surface of the obstacle
+                        const settledY = Math.min(drone.y, ry - drone.radius * 0.75);
+                        initiateSafeLanding('obstacle', settledY);
+                        return;
+                    }
+                }
+
+                // 3. Check Ancient Microbe Sample Pickups
+                for (let i = microbes.length - 1; i >= 0; i--) {
+                    const m = microbes[i];
+                    if (m.collected) continue;
+                    const dx = drone.x - m.x;
+                    const dy = drone.y - m.y;
+                    const pickupDist = drone.radius + m.radius + 6;
+                    if (dx * dx + dy * dy <= pickupDist * pickupDist) {
+                        m.collected = true;
+                        samplesCollected += 1;
+                        discoveryPoints += 100;
+                        audio.playCollectMicrobe();
+                        spawnSampleSparkles(m.x, m.y, 16);
+                        microbes.splice(i, 1);
+                    }
+                }
+            }
+
+            // =========================================================================
+            // 8. MAIN UPDATE LOOP
+            // =========================================================================
+            function update(dt) {
+                // Update dust & sparkle particles across active states
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    const p = particles[i];
+                    p.x += p.vx * dt;
+                    p.y += p.vy * dt;
+                    p.life -= p.decay * dt;
+                    if (p.life <= 0) {
+                        particles.splice(i, 1);
+                    }
+                }
+
+                // Handle Safe Landing Spin-Down Sequence
+                if (gameState === STATE.LANDING) {
+                    landingTimer += dt;
+                    drone.tilt *= Math.pow(0.05, dt);
+                    drone.rotorSpeed = Math.max(0, drone.rotorSpeed - 22 * dt);
+                    drone.rotorAngle += drone.rotorSpeed * dt;
+
+                    if (landingTimer >= 1.25) {
+                        finalizeMissionLock();
+                    }
+                    return;
+                }
+
+                if (gameState !== STATE.PLAYING) {
+                    drone.rotorAngle += 18 * dt;
+                    return;
+                }
+
+                if (drone.invulnTimer > 0) {
+                    drone.invulnTimer -= dt;
+                }
+
+                // Progressive speed curve up to 400m
+                const progressRatio = Math.min(1, depthMeters / MAX_DEPTH_METERS);
+                currentDescentSpeed = baseDescentSpeed + progressRatio * 140;
+                audio.updateRotorPitch(progressRatio);
+
+                // Horizontal Drone Steering
+                const accel = 1650;
+                const maxSpeed = 430;
+                const friction = 0.86;
+
+                if (keys.left && !keys.right) {
+                    drone.vx -= accel * dt;
+                } else if (keys.right && !keys.left) {
+                    drone.vx += accel * dt;
+                } else {
+                    drone.vx *= Math.pow(friction, dt * 60);
+                }
+
+                drone.vx = Math.max(-maxSpeed, Math.min(maxSpeed, drone.vx));
+                drone.x += drone.vx * dt;
+
+                const targetTilt = (drone.vx / maxSpeed) * 0.34;
+                drone.tilt += (targetTilt - drone.tilt) * Math.min(1, dt * 14);
+                drone.rotorAngle += drone.rotorSpeed * dt;
+
+                // Vertical Descent & 400m Cap
+                const dy = currentDescentSpeed * dt;
+                const prevDepth = depthMeters;
+                depthMeters = Math.min(MAX_DEPTH_METERS, depthMeters + dy * 0.042);
+
+                const actualDepthDelta = depthMeters - prevDepth;
+                discoveryPoints += actualDepthDelta * 2.5;
+
+                // Silent 100m Milestone Bonus
+                if (depthMeters >= nextMilestone && nextMilestone <= MAX_DEPTH_METERS) {
+                    discoveryPoints += 50;
+                    nextMilestone += 100;
+                }
+
+                // Scroll Tunnel Walls
+                for (let i = 0; i < wallSegments.length; i++) {
+                    wallSegments[i].y -= dy;
+                }
+
+                while (wallSegments.length > 0 && wallSegments[0].y + SEGMENT_HEIGHT < -SEGMENT_HEIGHT) {
+                    wallSegments.shift();
+                    const lastSeg = wallSegments[wallSegments.length - 1];
+                    const nextY = lastSeg.y + SEGMENT_HEIGHT;
+                    const bounds = computeWallBoundsAt(tunnelSeedPhase, depthMeters);
+                    wallSegments.push({
+                        y: nextY,
+                        left: bounds.left,
+                        right: bounds.right,
+                        strataColor: Math.floor(tunnelSeedPhase * 10) % 3 === 0 ? '#5c2314' : '#45180d'
+                    });
+                    tunnelSeedPhase += 0.28;
+                }
+
+                // Scroll Obstacles & Microbes
+                for (let i = obstacles.length - 1; i >= 0; i--) {
+                    obstacles[i].y -= dy;
+                    if (obstacles[i].y + obstacles[i].h < -60) {
+                        obstacles.splice(i, 1);
+                    }
+                }
+
+                for (let i = microbes.length - 1; i >= 0; i--) {
+                    microbes[i].y -= dy;
+                    microbes[i].pulsePhase += dt * 5;
+                    if (microbes[i].y + microbes[i].radius < -50) {
+                        microbes.splice(i, 1);
+                    }
+                }
+
+                // Scroll Ambient Dust
+                for (let i = 0; i < dustMotes.length; i++) {
+                    const d = dustMotes[i];
+                    d.y -= dy * d.speedFactor;
+                    if (d.y < -10) {
+                        d.y = height + 10;
+                        d.x = Math.random() * width;
+                    }
+                }
+
+                // Stop spawning new hazards right before the 400m cavern floor
+                if (depthMeters < MAX_DEPTH_METERS - 18) {
+                    distanceSinceLastObstacle += dy;
+                    const obstacleInterval = Math.max(175, 295 - progressRatio * 95);
+                    if (distanceSinceLastObstacle >= obstacleInterval) {
+                        distanceSinceLastObstacle = 0;
+                        const bottomSeg = wallSegments[wallSegments.length - 1];
+                        if (bottomSeg) {
+                            spawnRockObstacle(height + 40, bottomSeg.left, bottomSeg.right);
+                        }
+                    }
+
+                    distanceSinceLastMicrobe += dy;
+                    if (distanceSinceLastMicrobe >= 340) {
+                        distanceSinceLastMicrobe = 0;
+                        const bottomSeg = wallSegments[wallSegments.length - 1];
+                        if (bottomSeg) {
+                            spawnMicrobeNode(height + 95, bottomSeg.left, bottomSeg.right);
+                        }
+                    }
+                }
+
+                // Check if approaching or reaching the 400m Cavern Floor
+                const metersRemaining = MAX_DEPTH_METERS - depthMeters;
+                if (metersRemaining <= 16) {
+                    const floorScreenY = drone.y + drone.radius * 0.8 + (metersRemaining / 0.042);
+                    cavernFloorY = Math.max(drone.y + drone.radius * 0.8, floorScreenY);
+                }
+
+                if (depthMeters >= MAX_DEPTH_METERS) {
+                    depthMeters = MAX_DEPTH_METERS;
+                    cavernFloorY = drone.y + drone.radius * 0.8;
+                    updateHUD();
+                    initiateSafeLanding('floor', drone.y);
+                    return;
+                }
+
+                checkCollisions();
+                updateHUD();
+            }
+
+            // =========================================================================
+            // 9. RENDERING PIPELINE (Canvas 2D)
+            // =========================================================================
+            function render() {
+                ctx.clearRect(0, 0, width, height);
+
+                // 1. Deep Subsurface Background Gradient
+                const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
+                bgGrad.addColorStop(0, '#1f0d07');
+                bgGrad.addColorStop(0.5, '#120704');
+                bgGrad.addColorStop(1, '#080302');
+                ctx.fillStyle = bgGrad;
+                ctx.fillRect(0, 0, width, height);
+
+                // 2. Subtle Background Depth Grid Lines
+                ctx.strokeStyle = 'rgba(234, 88, 12, 0.06)';
+                ctx.lineWidth = 1;
+                const gridSpacing = 80;
+                const gridOffset = (depthMeters * 24) % gridSpacing;
+                for (let y = -gridOffset; y < height; y += gridSpacing) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(width, y);
+                    ctx.stroke();
+                }
+
+                // 3. Drone Volumetric Spotlight Cone
+                if (gameState === STATE.PLAYING || gameState === STATE.MENU || gameState === STATE.LANDING) {
+                    ctx.save();
+                    ctx.translate(drone.x, drone.y + 8);
+                    ctx.rotate(drone.tilt * 0.6);
+                    const coneGrad = ctx.createLinearGradient(0, 0, 0, height * 0.52);
+                    coneGrad.addColorStop(0, 'rgba(254, 243, 199, 0.20)');
+                    coneGrad.addColorStop(0.5, 'rgba(251, 146, 60, 0.07)');
+                    coneGrad.addColorStop(1, 'rgba(251, 146, 60, 0)');
+                    ctx.fillStyle = coneGrad;
+                    ctx.beginPath();
+                    ctx.moveTo(-10, 0);
+                    ctx.lineTo(10, 0);
+                    ctx.lineTo(135, height * 0.52);
+                    ctx.lineTo(-135, height * 0.52);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                // 4. Ambient Martian Dust Motes
+                for (let i = 0; i < dustMotes.length; i++) {
+                    const d = dustMotes[i];
+                    ctx.fillStyle = `rgba(251, 146, 60, ${d.alpha})`;
+                    ctx.beginPath();
+                    ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // 5. Ancient Microbe Samples
+                for (let i = 0; i < microbes.length; i++) {
+                    renderMicrobe(microbes[i]);
+                }
+
+                // 6. Rock Obstacles
+                for (let i = 0; i < obstacles.length; i++) {
+                    renderRockObstacle(obstacles[i]);
+                }
+
+                // 7. 400m Cavern Floor (if visible near bottom)
+                if (cavernFloorY !== null && cavernFloorY <= height + 20) {
+                    renderCavernFloor(cavernFloorY);
+                }
+
+                // 8. Martian Canyon Walls
+                renderTunnelWalls();
+
+                // 9. Particles
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    ctx.globalAlpha = Math.max(0, p.life);
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.globalAlpha = 1;
+
+                // 10. Mars Helicopter / Reconnaissance Drone
+                renderDrone();
+            }
+
+            function renderCavernFloor(floorY) {
+                const floorGrad = ctx.createLinearGradient(0, floorY, 0, height + 40);
+                floorGrad.addColorStop(0, '#7c2d12');
+                floorGrad.addColorStop(0.25, '#451a03');
+                floorGrad.addColorStop(1, '#1c0a04');
+
+                ctx.fillStyle = floorGrad;
+                ctx.beginPath();
+                ctx.moveTo(0, floorY);
+                for (let x = 0; x <= width; x += 28) {
+                    const bump = Math.sin(x * 0.08) * 3;
+                    ctx.lineTo(x, floorY + bump);
+                }
+                ctx.lineTo(width, height + 40);
+                ctx.lineTo(0, height + 40);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.strokeStyle = '#fb923c';
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                ctx.moveTo(0, floorY);
+                ctx.lineTo(width, floorY);
+                ctx.stroke();
+            }
+
+            function renderTunnelWalls() {
+                if (wallSegments.length < 2) return;
+
+                // Left Rock Wall
+                const leftGrad = ctx.createLinearGradient(0, 0, width * 0.4, 0);
+                leftGrad.addColorStop(0, '#1c0905');
+                leftGrad.addColorStop(0.75, '#4a1b0e');
+                leftGrad.addColorStop(1, '#7c2d12');
+
+                ctx.fillStyle = leftGrad;
+                ctx.beginPath();
+                ctx.moveTo(-10, wallSegments[0].y);
+                for (let i = 0; i < wallSegments.length; i++) {
+                    ctx.lineTo(wallSegments[i].left, wallSegments[i].y);
+                }
+                ctx.lineTo(-10, wallSegments[wallSegments.length - 1].y);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.strokeStyle = '#ea580c';
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                for (let i = 0; i < wallSegments.length; i++) {
+                    const seg = wallSegments[i];
+                    if (i === 0) ctx.moveTo(seg.left, seg.y);
+                    else ctx.lineTo(seg.left, seg.y);
+                }
+                ctx.stroke();
+
+                // Right Rock Wall
+                const rightGrad = ctx.createLinearGradient(width * 0.6, 0, width, 0);
+                rightGrad.addColorStop(0, '#7c2d12');
+                rightGrad.addColorStop(0.25, '#4a1b0e');
+                rightGrad.addColorStop(1, '#1c0905');
+
+                ctx.fillStyle = rightGrad;
+                ctx.beginPath();
+                ctx.moveTo(width + 10, wallSegments[0].y);
+                for (let i = 0; i < wallSegments.length; i++) {
+                    ctx.lineTo(wallSegments[i].right, wallSegments[i].y);
+                }
+                ctx.lineTo(width + 10, wallSegments[wallSegments.length - 1].y);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.strokeStyle = '#ea580c';
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                for (let i = 0; i < wallSegments.length; i++) {
+                    const seg = wallSegments[i];
+                    if (i === 0) ctx.moveTo(seg.right, seg.y);
+                    else ctx.lineTo(seg.right, seg.y);
+                }
+                ctx.stroke();
+            }
+
+            function renderRockObstacle(obs) {
+                ctx.save();
+                ctx.translate(obs.x, obs.y);
+
+                const rockGrad = ctx.createLinearGradient(0, 0, 0, obs.h);
+                rockGrad.addColorStop(0, '#9a3412');
+                rockGrad.addColorStop(0.5, '#5c1d0c');
+                rockGrad.addColorStop(1, '#290c05');
+
+                ctx.fillStyle = rockGrad;
+                ctx.beginPath();
+                obs.vertices.forEach((pt, idx) => {
+                    if (idx === 0) ctx.moveTo(pt.x, pt.y);
+                    else ctx.lineTo(pt.x, pt.y);
+                });
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.strokeStyle = '#fb923c';
+                ctx.lineWidth = 1.8;
+                ctx.stroke();
+
+                ctx.restore();
+            }
+
+            function renderMicrobe(m) {
+                const pulse = Math.sin(m.pulsePhase) * 0.25 + 1;
+                ctx.save();
+                ctx.translate(m.x, m.y);
+
+                const aura = ctx.createRadialGradient(0, 0, 2, 0, 0, m.radius * 2.2 * pulse);
+                aura.addColorStop(0, 'rgba(52, 211, 153, 0.65)');
+                aura.addColorStop(0.6, 'rgba(16, 185, 129, 0.2)');
+                aura.addColorStop(1, 'rgba(16, 185, 129, 0)');
+                ctx.fillStyle = aura;
+                ctx.beginPath();
+                ctx.arc(0, 0, m.radius * 2.2 * pulse, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.strokeStyle = '#a7f3d0';
+                ctx.lineWidth = 1.8;
+                ctx.fillStyle = 'rgba(6, 78, 59, 0.85)';
+                ctx.beginPath();
+                ctx.arc(0, 0, m.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.fillStyle = '#34d399';
+                ctx.beginPath();
+                ctx.ellipse(-3, -2, 4, 2.2, 0.5, 0, Math.PI * 2);
+                ctx.ellipse(3.5, 2.5, 3.5, 2, -0.4, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.restore();
+            }
+
+            function renderDrone() {
+                ctx.save();
+                ctx.translate(drone.x, drone.y);
+                ctx.rotate(drone.tilt);
+
+                // Landing Legs / Carbon Struts
+                ctx.strokeStyle = '#94a3b8';
+                ctx.lineWidth = 2.2;
+                ctx.beginPath();
+                ctx.moveTo(-7, 6);
+                ctx.lineTo(-15, 16);
+                ctx.lineTo(-19, 16);
+                ctx.moveTo(7, 6);
+                ctx.lineTo(15, 16);
+                ctx.lineTo(19, 16);
+                ctx.stroke();
+
+                // Main Avionics Cube (Gold Foil Thermal Insulation)
+                const bodyGrad = ctx.createLinearGradient(-11, -8, 11, 8);
+                bodyGrad.addColorStop(0, '#fbbf24');
+                bodyGrad.addColorStop(0.5, '#d97706');
+                bodyGrad.addColorStop(1, '#92400e');
+                ctx.fillStyle = bodyGrad;
+                ctx.strokeStyle = '#fef3c7';
+                ctx.lineWidth = 1.2;
+
+                ctx.beginPath();
+                ctx.roundRect(-11, -7, 22, 14, 4);
+                ctx.fill();
+                ctx.stroke();
+
+                // Forward Optical Camera Lens
+                ctx.fillStyle = '#0f172a';
+                ctx.beginPath();
+                ctx.arc(0, 1, 4.2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#38bdf8';
+                ctx.beginPath();
+                ctx.arc(-1, 0, 1.8, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Central Rotor Mast
+                ctx.fillStyle = '#cbd5e1';
+                ctx.fillRect(-2, -17, 4, 10);
+
+                // Top Solar Panel
+                ctx.fillStyle = '#1e3a8a';
+                ctx.strokeStyle = '#60a5fa';
+                ctx.lineWidth = 1;
+                ctx.fillRect(-10, -20, 20, 3.5);
+                ctx.strokeRect(-10, -20, 20, 3.5);
+
+                // Coaxial Counter-Rotating Carbon Blades
+                const bladeSpan1 = Math.cos(drone.rotorAngle) * 32;
+                const bladeSpan2 = Math.cos(drone.rotorAngle + Math.PI * 0.5) * 30;
+
+                ctx.strokeStyle = 'rgba(241, 245, 249, 0.85)';
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                ctx.moveTo(-bladeSpan1, -15);
+                ctx.lineTo(bladeSpan1, -15);
+                ctx.stroke();
+
+                ctx.strokeStyle = 'rgba(148, 163, 184, 0.75)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(-bladeSpan2, -12);
+                ctx.lineTo(bladeSpan2, -12);
+                ctx.stroke();
+
+                // Telemetry LED Indicator (Green when safely landed, blinking orange in flight)
+                if (gameState === STATE.LANDING || gameState === STATE.COMPLETE) {
+                    ctx.fillStyle = '#34d399';
+                    ctx.beginPath();
+                    ctx.arc(7, -3, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if (Math.sin(performance.now() * 0.01) > 0) {
+                    ctx.fillStyle = '#ef4444';
+                    ctx.beginPath();
+                    ctx.arc(7, -3, 1.8, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.restore();
+            }
+
+            // =========================================================================
+            // 10. ANIMATION LOOP & INPUT HANDLERS
+            // =========================================================================
+            function gameLoop(timestamp) {
+                if (!lastTime) lastTime = timestamp;
+                const dt = Math.min(0.05, (timestamp - lastTime) / 1000);
+                lastTime = timestamp;
+
+                update(dt);
+                render();
+
+                requestAnimationFrame(gameLoop);
+            }
+
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+                    keys.left = true;
+                    e.preventDefault();
+                }
+                if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+                    keys.right = true;
+                    e.preventDefault();
+                }
+            });
+
+            window.addEventListener('keyup', (e) => {
+                if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+                    keys.left = false;
+                }
+                if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+                    keys.right = false;
+                }
+            });
+
+            const touchLeft = document.getElementById('touch-left');
+            const touchRight = document.getElementById('touch-right');
+
+            function bindTouchButton(el, dir) {
+                const press = (e) => {
+                    e.preventDefault();
+                    keys[dir] = true;
+                    el.classList.add('pressed');
+                };
+                const release = (e) => {
+                    e.preventDefault();
+                    keys[dir] = false;
+                    el.classList.remove('pressed');
+                };
+                el.addEventListener('touchstart', press, { passive: false });
+                el.addEventListener('touchend', release, { passive: false });
+                el.addEventListener('touchcancel', release, { passive: false });
+                el.addEventListener('mousedown', press);
+                el.addEventListener('mouseup', release);
+                el.addEventListener('mouseleave', release);
+            }
+
+            bindTouchButton(touchLeft, 'left');
+            bindTouchButton(touchRight, 'right');
+
+            canvas.addEventListener('touchstart', (e) => {
+                if (gameState !== STATE.PLAYING) return;
+                const touchX = e.touches[0].clientX;
+                const rect = canvas.getBoundingClientRect();
+                const relX = touchX - rect.left;
+                keys.left = relX < rect.width * 0.5;
+                keys.right = relX >= rect.width * 0.5;
+            }, { passive: true });
+
+            canvas.addEventListener('touchmove', (e) => {
+                if (gameState !== STATE.PLAYING) return;
+                const touchX = e.touches[0].clientX;
+                const rect = canvas.getBoundingClientRect();
+                const relX = touchX - rect.left;
+                keys.left = relX < rect.width * 0.5;
+                keys.right = relX >= rect.width * 0.5;
+            }, { passive: true });
+
+            canvas.addEventListener('touchend', () => {
+                keys.left = false;
+                keys.right = false;
+            });
+
+            btnStart.addEventListener('click', startGame);
+
+            btnAudio.addEventListener('click', () => {
+                audio.init();
+                const isMuted = audio.toggleMute();
+                iconSoundOn.classList.toggle('hidden', isMuted);
+                iconSoundOff.classList.toggle('hidden', !isMuted);
+            });
+
+            function init() {
+                resizeCanvas();
+                initAmbientDust();
+                updateHUD();
+                requestAnimationFrame(gameLoop);
+            }
+
+            if (document.readyState === 'complete') {
+                init();
+            } else {
+                window.addEventListener('load', init);
+            }
+        })();
+    </script>
+</body>
+</html>
