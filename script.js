@@ -32,7 +32,7 @@
                     {
                         text: "Reinforce external solar panels and grid stability.",
                         effects: { energy: +10, life: -5, radiation: 0 , food: 0},
-                        nextEvent: "solar_flare_warning"
+                        nextEvent: "event2"
                     },
                     {
                         text: "Seal airlock bulkheads and run full-system radiation sweeps.",
@@ -41,6 +41,27 @@
                     }
                 ]
             },
+           "event2": {
+                tag: "Cosmic event",
+                image: "https://science.nasa.gov/wp-content/uploads/2023/04/hubble_friday_07302015-jpg.webp?resize=900,658",
+                alt: "Image of a dying star’s final surge",
+                heading: "Cosmic radiation surge",
+                description: "A dying star explodes light-years away, sending a sudden surge of high-energy gamma rays and cosmic radiation across space. Mars has no magnetic field and a very thin atmosphere, so the radiation slams directly into the surface without being blocked. ",
+                choices: [
+                    {
+                        text: "Move the gym shields to the greenhouse",
+                        effects: { life: -15, food: +0, radiation: -5, energy: +0 },
+                        nextEvent: "solar_flare_warning"
+                    },
+                    {
+                        text: "Leave the greenhouse and take shelter",
+                        effects: { life: +5, food: -15, radiation: +0, energy: +0 },
+                        nextEvent: "event3"
+                    }
+                ]
+            },
+        
+
             "solar_flare_warning": {
                 tag: "Space Weather Alert",
                 image: "image2.png",
