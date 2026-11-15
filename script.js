@@ -608,7 +608,7 @@ function renderEndScreen(isSuccess) {
     container.innerHTML = `
         <div class="game-over-screen ${outcomeClass}">
             <div class="visual-area" style="height: 200px; margin-bottom: 20px; border-radius: 8px;">
-                <img src="${isSuccess ? 'image1.png' : 'image2.png'}" alt="Mission final status view">
+                <img src="${isSuccess ? 'images/missionaccomplished.png' : 'images/missionfailed.png'}" alt="Mission final status view">
             </div>
             <h2>${outcomeTitle}</h2>
             <p style="color: var(--text-muted); margin-bottom: 20px; line-height: 1.6;">${outcomeText}</p>
