@@ -158,7 +158,7 @@ const eventsList = {
         image: "https://www.nasa.gov/wp-content/uploads/2017/04/lunar_greenhouse_demo_u_of_az_09_b.jpg?resize=2000,1541",
         alt: "This is an example of a greenhouse in Mars",
         heading: "Extreme Temperatures on Mars",
-        description: "Everything seemed normal at the Mars research base. The astronauts had been growing their own vegetables inside a greenhouse and depending on solar panels for electricity. But that night something went wrong. The temperature outside began to drop rapidly. Mars already had an average temperature of approximately −65°C (−85°F), but the approaching Martian night brought even colder conditions. Suddenly, an alarm echoed through the base. WARNING: GREENHOUSE TEMPERATURE DROPPING, LOW BATTERY POWER. The extreme cold was making battery performance more difficult, while the heating system continued demanding electricity. Outside, the solar panels could not generate power during the night. The astronauts faced a terrifying possibility: if they couldn't maintain the greenhouse temperature, they could lose their crops. Without fresh food, their already limited food supplies would become an even bigger problem. They had to find a solution before the greenhouse became too cold.",
+        description: "Everything seemed normal at the Mars research base. The astronauts had been growing their own vegetables inside a greenhouse and depending on solar panels for electricity. But that night something went wrong. The temperature outside began to drop rapidly. Mars already had an average temperature of approximately −65°C (−85°F), but the approaching Martian night brought even colder conditions. Suddenly, an alarm echoed through the base.<br><br><strong style="color: #ff4d4d;">WARNING: GREENHOUSE TEMPERATURE DROPPING, LOW BATTERY POWER.</strong><br><br>The extreme cold was making battery performance more difficult, while the heating system continued demanding electricity. Outside, the solar panels could not generate power during the night. The astronauts faced a terrifying possibility: if they couldn't maintain the greenhouse temperature, they could lose their crops. Without fresh food, their already limited food supplies would become an even bigger problem. They had to find a solution before the greenhouse became too cold.",
         choices: [
             {
                 text: "Increase greenhouse heating to help the plants",
@@ -172,7 +172,6 @@ const eventsList = {
             }
         ]
     },
-
     "solar_flare_warning": {
         tag: "Space Weather Alert",
         image: "image2.png",
@@ -303,7 +302,7 @@ function updateGame() {
 
     // Update narrative copy
     document.getElementById("event-heading").innerText = current.heading;
-    document.getElementById("event-description").innerText = current.description;
+    document.getElementById("event-description").innerHTML = current.description;
 
     // Dynamically render 1 or 2 buttons based on how many choices the event has
     const choicesArea = document.getElementById("choices-area");
