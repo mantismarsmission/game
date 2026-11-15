@@ -42,7 +42,7 @@ const eventsList = {
 
     "sol_transition": {
         tag: "End of Sol Log",
-        image: "https://ciencia.nasa.gov/wp-content/uploads/sites/2/2023/12/925-pia07997-1280.jpg?resize=768,591",
+        image: "https://ciencia.nasa.gov/wp-content/uploads/sites/2/2023/12/925-pia07997-1280.jpg?resize=868,500",
         alt: "Martian horizon at dusk",
         heading: "Sol Complete",
         description: "It was a tough day, or as we call it here on Mars, a tough Sol. Systems have been stabilized for the freezing Martian night. We will continue operations tomorrow on the next Sol.",
