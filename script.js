@@ -34,7 +34,7 @@ const eventsList = {
         image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/july/PIA00621.jpg?w=1280&h=612&fit=crop&crop=faces%2Cfocalpoint",
         alt: "This is the view of Mars through the vision of a rover.",
         heading: "Welcome to Mantis Mars Mission",
-        description: "Your habitation module has successfully touched down in the Elysium Planitia region. Systems are green, but harsh Martian weather patterns loom on the horizon. Manage your resources carefully to ensure mission survival.",
+        description: "Your habitation module has successfully touched down in the Isidis Planitia region. Systems are green, but harsh Martian weather patterns loom on the horizon. Manage your resources carefully to ensure mission survival.",
         choices: [
             {
                 text: "Begin Mission Logistics",
@@ -124,7 +124,7 @@ const eventsList = {
         image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/july/PIA00621.jpg?w=1280&h=612&fit=crop&crop=faces%2Cfocalpoint",
         alt: "Martian horizon at dusk",
         heading: "Sidequest Complete",
-        description: "The team returns to the habitat as night falls over Elysium Planitia. Tomorrow, all crew members will focus on the main mission.",
+        description: "The team returns to the habitat as night falls over Isidis Planitia. Tomorrow, all crew members will focus on the main mission.",
         choices: [
             {
                 text: "Start Main Mission on Next Sol",
@@ -279,7 +279,7 @@ const eventsList = {
         image: "image2.png",
         alt: "Coronal mass ejection visual simulation over the red horizon",
         heading: "Solar Flare Incoming",
-        description: "Deep space monitors flare up red. A heavy coronal mass ejection is hurtling directly toward Elysium Planitia, threatening unshielded electronics and crew health.",
+        description: "Deep space monitors flare up red. A heavy coronal mass ejection is hurtling directly toward Isidis Planitia, threatening unshielded electronics and crew health.",
         choices: [
             {
                 text: "Activate emergency magnetic shields (High Energy Drain).",
