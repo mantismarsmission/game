@@ -52,11 +52,29 @@ const eventsList = {
             {
                 text: "Seal airlock bulkheads and run full-system radiation sweeps.",
                 effects: { radiation: +10, energy: -10, life: 0, food: 0 },
-                nextEvent: "EJEMPLOEVENTO"
+                nextEvent: "dust_tornado"
             }
         ]
     },
-
+    "dust_tornado": {
+        tag: "Xtreme weather",
+        image: "https://www.nasa.gov/wp-content/uploads/2015/09/21_the_serpent_dust_devil_on_mars_pia15116-br2.jpg?resize=900,597",
+        alt: "a dust tornado in mars",
+        heading: "The bad tornados",
+        description: "Two dust tornadoes are heading toward the space base, one toward the solar panels and the other toward the living quarters. You only have enough time to build a barricade to stop one of the approaching tornadoes. Which one will you protect?",
+        choices: [
+            {
+                text: "Create a barricade to protect the bedroom",
+                effects: { life: 0, food: 0, radiation: 0, energy: -20 },
+                nextEvent: "event3"
+            },
+            {
+                text: "Create a barricade to protect the solar panels",
+                effects: { life: -20, food: 0, radiation: 0, energy: 0 },
+                nextEvent: "event2"
+            }
+        ]
+    },
     "event2": {
         tag: "Cosmic event",
         image: "https://science.nasa.gov/wp-content/uploads/2023/04/hubble_friday_07302015-jpg.webp?resize=900,658",
@@ -76,7 +94,7 @@ const eventsList = {
             }
         ]
     },
-
+    
     "event3": {
         tag: "Weather event",
         image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2002/december/northmars_mgs_big.jpg?w=2000&h=1500&fit=crop&crop=faces%2Cfocalpoint",
