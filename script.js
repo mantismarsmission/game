@@ -51,7 +51,7 @@
                     {
                         text: "Move the gym shields to the greenhouse",
                         effects: { life: -15, food: +0, radiation: -5, energy: +0 },
-                        nextEvent: "event6"
+                        nextEvent: "event5"
                     },
                     {
                         text: "Leave the greenhouse and take shelter",
@@ -60,7 +60,25 @@
                     }
                 ]
             },
-        
+          "event5": {
+                tag: "GRB radiation event",
+                image: "https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2026/june/eagle.jpg?w=1876&h=2000&fit=crop&crop=faces%2Cfocalpoint",
+                alt: "Lethal dose of radiation has been emitted by a nearby supernova",
+                heading: "Gamma Ray Bursts and radiation has come down to Mars",
+                description: "A nearby Type Ic hypernovae (a supernova) emitted a large dose of gamma ray bursts and cosmic radiation. Anything caught in this beam even thousands of light-years away would suffer catastrophic radiation damage, such as body altering effects and affecting the electronics. ",
+                choices: [
+                    {
+                        text: " Override the life support system, hence the computer is currently affected by the radiation and is glitching, the computer might start accidentally venting cabin air or shutting off oxygen flow.",
+                        effects: { life: +15, food: -10, radiation: +5, energy: +0 },
+                        nextEvent: "event6"
+                    },
+                    {
+                        text: "The radiation might affect and alter food supplies or ruin food crops, You can seal and put away all the ailments to protect them from radiation",
+                        effects: { life: -15, food: +10, radiation: +5, energy: +0 },
+                        nextEvent: "marsquake_event"
+                    }
+                ]
+            },
             "event6": {
                 tag: "Extreme temperature",
                 image: "https://www.nasa.gov/wp-content/uploads/2017/04/lunar_greenhouse_demo_u_of_az_09_b.jpg?resize=2000,1541",
