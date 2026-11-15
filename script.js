@@ -32,7 +32,7 @@
                     {
                         text: "Reinforce external solar panels and grid stability.",
                         effects: { energy: +10, life: -5, radiation: 0 , food: 0},
-                        nextEvent: "dust_tornado"
+                        nextEvent: "event2"
                     },
                     {
                         text: "Seal airlock bulkheads and run full-system radiation sweeps.",
